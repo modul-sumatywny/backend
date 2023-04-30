@@ -2,19 +2,17 @@ package ms.restaurant.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "PRODUCTS")
-public class Product {
+@Table(name = "DISHES")
+public class Dish {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,9 +23,14 @@ public class Product {
     private String name;
 
     @Column
-    private String ean;
+    private Integer price;
 
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY ,cascade = {CascadeType.MERGE})
-    private List<Dish> dishes =  new ArrayList<>();
+//    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY ,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "dish_product",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> products = new ArrayList<>();
 
 }

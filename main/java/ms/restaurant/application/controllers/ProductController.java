@@ -1,30 +1,40 @@
 package ms.restaurant.application.controllers;
 
+import ms.restaurant.domain.facadeImpl.ProductFacadeImpl;
+import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ms.restaurant.application.dto.ProductDTO;
-import ms.restaurant.domain.facade.ProductFacade;
-import ms.restaurant.domain.model.IDObject;
 
 import jakarta.validation.*;
-import java.util.Optional;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductFacade productFacade;
+    private final ProductFacadeImpl productFacadeImpl;
 
     @Autowired
-    public ProductController(ProductFacade productFacade) { this.productFacade = productFacade; }
+    public ProductController(ProductFacadeImpl productFacadeImpl) { this.productFacadeImpl = productFacadeImpl; }
 
     @GetMapping("/{id}")
-    public Optional<ProductDTO> getProduct(@PathVariable Long id) {
-        return productFacade.getProduct(id);
+    public ResponseEntity<Map<String, String>> getProduct(@PathVariable Long id) {
+        return productFacadeImpl.getProduct(id);
     }
 
-    @PostMapping("/new")
+    @PostMapping("/add")
     public IDObject addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        return productFacade.addProduct(productDTO);
+        return productFacadeImpl.add(productDTO);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteProduct(@PathVariable Long id) { productFacadeImpl.delete(id); }
+
+    @PutMapping("/update/{id}")
+    public void updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
+        productFacadeImpl.update(productDTO, id);
     }
 }
 
