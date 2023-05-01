@@ -25,12 +25,15 @@ public class Dish {
     @Column
     private Integer price;
 
-//    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY ,cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY ,cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "dish_product",
             joinColumns = @JoinColumn(name = "dish_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products = new ArrayList<>();
+
+//    @ManyToOne
+//    @JoinColumn(name = "menu_id")
+//    private Menu menu;
 
 }

@@ -82,6 +82,11 @@ public class ProductFacadeImpl implements CRUDFacade<ProductDTO>, ProductFacade 
         }
     }
 
+//    @Override
+//    public IDObject add(ProductDTO productDTO) {
+//        return null;
+//    }
+
 
     //metoda add ponizej jest do usuniecia. Tylko w przyszlosci bo trzeba wszystkie metody z interfejsu nadpisac
 //    @Override
@@ -96,16 +101,19 @@ public class ProductFacadeImpl implements CRUDFacade<ProductDTO>, ProductFacade 
 //        return new IDObject(product.getId());
 //    }
 
+
+    //to tez do wydupcenia bo sie request zapetla
+    @Override
     public IDObject add(ProductDTO productDTO) {
         Product product = toProductFromDTO(productDTO);
-        for (Dish dish : product.getDishes()) {
-            Optional<Dish> existingDish = dishRepository.findByName(dish.getName());
-            if (existingDish.isPresent()) {
-                dish.setId(existingDish.get().getId());
-            } else {
-                dishRepository.save(dish); // zapisujemy nowy produkt do bazy danych
-            }
-        }
+//        for (Dish dish : product.getDishes()) {
+//            Optional<Dish> existingDish = dishRepository.findByName(dish.getName());
+//            if (existingDish.isPresent()) {
+//                dish.setId(existingDish.get().getId());
+//            } else {
+//                dishRepository.save(dish); // zapisujemy nowy produkt do bazy danych
+//            }
+//        }
         if(!productRepository.existsByEan(product.getEan())) {
             productRepository.save(product);
         } else {

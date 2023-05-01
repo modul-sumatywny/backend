@@ -1,5 +1,6 @@
 package ms.restaurant.domain.facadeImpl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.DishDTO;
 import ms.restaurant.application.dto.ProductDTO;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.beans.Transient;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
         return modelMapper.map(dishDTO, Dish.class);
     }
 
-    public DishDTO toDishDTO(Optional<Dish> dish) {
+    public DishDTO toDishDTO(Dish dish) {
         return modelMapper.map(dish, DishDTO.class);
     }
 
@@ -85,22 +87,46 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
 //        return new IDObject(dish.getId());
 //    }
 
+    @Transactional
     public IDObject add(DishDTO dishDTO) {
         Dish dish = toDishFromDTO(dishDTO);
+
         for (Product product : dish.getProducts()) {
             Optional<Product> existingProduct = productRepository.findByEan(product.getEan());
             if (existingProduct.isPresent()) {
-                product.setId(existingProduct.get().getId());
+                product.setId(existingProduct.get().getId()); //jeśli istnieje już taki produkt w bazie danych to bierzemy jego id zeby nie tworzylo nowego rekordu z nowym randomowym id
             } else {
                 productRepository.save(product); // zapisujemy nowy produkt do bazy danych
             }
         }
+
         if(!dishRepository.existsByName(dish.getName())) {
             dishRepository.save(dish);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with this name already exists in database!");
         }
         return new IDObject(dish.getId());
+    }
+
+    @Transactional
+    public void addDishWithGivenID(DishDTO dishDTO, Long id) {
+        Dish dish = toDishFromDTO(dishDTO);
+        dish.setId(id);
+
+        for (Product product : dish.getProducts()) {
+            Optional<Product> existingProduct = productRepository.findByEan(product.getEan());
+            if (existingProduct.isPresent()) {
+                product.setId(existingProduct.get().getId()); //jeśli istnieje już taki produkt w bazie danych to bierzemy jego id zeby nie tworzylo nowego rekordu z nowym randomowym id
+            } else {
+                productRepository.save(product); // zapisujemy nowy produkt do bazy danych
+            }
+        }
+
+        if(!dishRepository.existsByName(dish.getName())) {
+            dishRepository.save(dish);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with this name already exists in database!");
+        }
     }
 
     @Override
