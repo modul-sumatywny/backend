@@ -1,14 +1,10 @@
-package ms.restaurant.application.dto.dishDTO;
+package ms.restaurant.application.dto.dishDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ms.restaurant.domain.model.Product;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +13,9 @@ public class UpdateDishDTO {
     @NotBlank(message = "Name of dish cannot be blank")
     private String name;
 
-    @NotNull(message = "Price of dish cannot be null")
+    @NotNull(message = " of dish cannot be null")
     private Integer price;
+
+    @NotBlank(message = "Category of dish cannot be blank")
+    private String category;
 }

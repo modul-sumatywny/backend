@@ -2,10 +2,10 @@ package ms.restaurant.application.controllers;
 
 
 import jakarta.validation.Valid;
-import ms.restaurant.application.dto.dishDTO.DishDTO;
-import ms.restaurant.application.dto.dishDTO.UpdateDishDTO;
-import ms.restaurant.application.dto.productDTO.ProductDTO;
-import ms.restaurant.application.dto.productDTO.ProductEanDto;
+import ms.restaurant.application.dto.dishDto.DishDTO;
+import ms.restaurant.application.dto.dishDto.UpdateDishDTO;
+import ms.restaurant.application.dto.productDto.ProductDTO;
+import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facadeImpl.DishFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;

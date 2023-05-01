@@ -23,9 +23,17 @@ public class Dish {
     private String name;
 
     @Column
+    private String category;
+
+    @Column
     private Integer price;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "dish_id", nullable = false)
+    @JoinColumn(name = "dish_id")
     private List<Product> products = new ArrayList<>();
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 }

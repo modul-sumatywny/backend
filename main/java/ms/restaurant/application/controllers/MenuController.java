@@ -2,13 +2,14 @@ package ms.restaurant.application.controllers;
 
 
 import jakarta.validation.Valid;
-import ms.restaurant.application.dto.MenuDTO;
+import ms.restaurant.application.dto.menuDto.MenuDTO;
 import ms.restaurant.domain.facadeImpl.MenuFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/menu")
@@ -21,8 +22,8 @@ public class MenuController {
     }
 
     @GetMapping("/{id}")
-    public Optional<MenuDTO> get(@PathVariable Long id) {
-        return menuFacadeImpl.get(id);
+    public ResponseEntity<Map<String, String>> getMenu(@PathVariable Long id) {
+        return menuFacadeImpl.getMenu(id);
     }
 
 //    @PostMapping("/addDish")

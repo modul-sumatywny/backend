@@ -1,7 +1,7 @@
 package ms.restaurant.domain.facadeImpl;
 
 import lombok.RequiredArgsConstructor;
-import ms.restaurant.application.dto.RestaurantDTO;
+import ms.restaurant.application.dto.menuDto.RestaurantDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Restaurant;

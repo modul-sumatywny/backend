@@ -4,7 +4,7 @@ import ms.restaurant.domain.facadeImpl.ProductFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ms.restaurant.application.dto.productDTO.ProductDTO;
+import ms.restaurant.application.dto.productDto.ProductDTO;
 
 import jakarta.validation.*;
 
@@ -23,6 +23,7 @@ public class ProductController {
         return productFacadeImpl.getProduct(id);
     }
 
+    //nie można dodawać bezposrednio produktu bo kazdy produkt musi miec przypisane danie. Produkt mozna dodawac w kontrolerze Dish
 //    @PostMapping("/add/{id}")
 //    public IDObject addProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
 //        return productFacadeImpl.addProductToDish(productDTO, id);

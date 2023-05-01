@@ -26,7 +26,7 @@ public class Restaurant {
     @Column
     private String address;
 
-    @OneToOne
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
+//    @OneToOne
+//    @JoinColumn(name = "menu_id")
+//    private Menu menu;
 }

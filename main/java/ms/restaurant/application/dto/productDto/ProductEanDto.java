@@ -1,4 +1,4 @@
-package ms.restaurant.application.dto.productDTO;
+package ms.restaurant.application.dto.productDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

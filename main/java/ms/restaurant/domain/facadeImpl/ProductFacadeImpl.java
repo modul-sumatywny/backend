@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ms.restaurant.application.dto.productDTO.ProductDTO;
+import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.domain.facade.ProductFacade;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Product;

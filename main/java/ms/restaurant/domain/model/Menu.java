@@ -16,17 +16,22 @@ public class Menu {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "menu_id", nullable = false)
     private Long id;
 
     @Column
     private String name;
 
-    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
-   // @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)
+//    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
+//   // @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)
+//    private List<Dish> dishes = new ArrayList<>();
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "menu_id", nullable = true)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Dish> dishes = new ArrayList<>();
 
-    @OneToOne(mappedBy = "menu")
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+//    @OneToOne(mappedBy = "menu")
+//    @JoinColumn(name = "restaurant_id", nullable = false)
+//    private Restaurant restaurant;
 }

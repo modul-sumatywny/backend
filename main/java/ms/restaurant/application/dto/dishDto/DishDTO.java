@@ -1,4 +1,4 @@
-package ms.restaurant.application.dto.dishDTO;
+package ms.restaurant.application.dto.dishDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +19,9 @@ public class DishDTO {
 
     @NotNull(message = "Price of dish cannot be null")
     private Integer price;
+
+    @NotBlank(message = "Category of dish cannot be blank")
+    private String category;
 
     @NotNull
     @Size(min = 1, message = "There must be at least 1 ingredient for dish")
