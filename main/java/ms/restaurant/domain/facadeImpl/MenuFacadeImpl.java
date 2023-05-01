@@ -2,18 +2,16 @@ package ms.restaurant.domain.facadeImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import ms.restaurant.application.dto.DishDTO;
+import ms.restaurant.application.dto.dishDTO.DishDTO;
 import ms.restaurant.application.dto.MenuDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
 import ms.restaurant.domain.model.Dish;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Menu;
-import ms.restaurant.domain.model.Product;
 import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.MenuRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 

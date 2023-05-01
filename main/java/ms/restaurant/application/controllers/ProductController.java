@@ -1,11 +1,10 @@
 package ms.restaurant.application.controllers;
 
 import ms.restaurant.domain.facadeImpl.ProductFacadeImpl;
-import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ms.restaurant.application.dto.ProductDTO;
+import ms.restaurant.application.dto.productDTO.ProductDTO;
 
 import jakarta.validation.*;
 
@@ -24,10 +23,10 @@ public class ProductController {
         return productFacadeImpl.getProduct(id);
     }
 
-    @PostMapping("/add")
-    public IDObject addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        return productFacadeImpl.add(productDTO);
-    }
+//    @PostMapping("/add/{id}")
+//    public IDObject addProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
+//        return productFacadeImpl.addProductToDish(productDTO, id);
+//    }
 
     @DeleteMapping("/delete/{id}")
     public void deleteProduct(@PathVariable Long id) { productFacadeImpl.delete(id); }

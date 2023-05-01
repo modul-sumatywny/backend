@@ -26,8 +26,4 @@ public class Product {
 
     @Column
     private String ean;
-
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY ,cascade = {CascadeType.MERGE})
-    private List<Dish> dishes =  new ArrayList<>();
-
 }

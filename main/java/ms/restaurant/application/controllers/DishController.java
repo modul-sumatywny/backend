@@ -2,7 +2,10 @@ package ms.restaurant.application.controllers;
 
 
 import jakarta.validation.Valid;
-import ms.restaurant.application.dto.DishDTO;
+import ms.restaurant.application.dto.dishDTO.DishDTO;
+import ms.restaurant.application.dto.dishDTO.UpdateDishDTO;
+import ms.restaurant.application.dto.productDTO.ProductDTO;
+import ms.restaurant.application.dto.productDTO.ProductEanDto;
 import ms.restaurant.domain.facadeImpl.DishFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,17 @@ public class DishController {
     public void deleteDish(@PathVariable Long id) { dishFacadeImpl.delete(id); }
 
     @PutMapping("/update/{id}")
-    public void updateDish(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long id) {
-        dishFacadeImpl.update(dishDTO, id);
+    public void updateDish(@Valid @RequestBody UpdateDishDTO updateDishDTO, @PathVariable Long id) {
+        dishFacadeImpl.update(updateDishDTO, id);
+    }
+
+    @PostMapping("/add/product/{id}")
+    public void addProductToDish(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
+        dishFacadeImpl.addProductToDish(productDTO, id);
+    }
+
+    @DeleteMapping("/delete/product/{dishId}")
+    public void deleteProductFromDish(@RequestBody ProductEanDto productEanDTO, @PathVariable Long dishId) {
+        dishFacadeImpl.deleteProductFromDish(productEanDTO, dishId);
     }
 }
