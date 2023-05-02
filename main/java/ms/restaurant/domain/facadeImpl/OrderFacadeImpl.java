@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.menuDto.RestaurantDTO;
 import ms.restaurant.application.dto.orderDto.OrderDTO;
+import ms.restaurant.application.dto.orderDto.OrderStatusDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
 import ms.restaurant.domain.facade.OrderFacade;
 import ms.restaurant.domain.model.*;
@@ -85,12 +86,32 @@ public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
         List<Dish> dishes = new ArrayList<>();
         for (Long dishId : orderDTO.getDishesIDs()) {
             Dish dish = dishRepository.findById(dishId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with ID " + dishId + " doesn't exist in database"));
+//            dishes.add(dish);
+            boolean found = false;
+            for (Menu menu : existingRestaurant.getMenus()) {
+                if (menu.getDishes().contains(dish)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with ID " + dishId + " is not available in any menu of this restaurant");
+            }
+
             dishes.add(dish);
         }
         newOrder.setDishes(dishes);
         orderRepository.save(newOrder);
 
         return new IDObject(newOrder.getId());
+    }
+
+    public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with this ID doesn't exist in database"));
+        order.setOrderStatus(Order.OrderStatus.valueOf(orderStatusDTO.getOrderStatus()));
+        order.setId(orderId);
+        orderRepository.save(order);
     }
 
     public OrderDTO toOrderDTO(Order order) {

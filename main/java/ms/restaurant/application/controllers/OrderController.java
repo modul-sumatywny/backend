@@ -2,8 +2,10 @@ package ms.restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import ms.restaurant.application.dto.orderDto.OrderDTO;
+import ms.restaurant.application.dto.orderDto.OrderStatusDTO;
 import ms.restaurant.domain.facadeImpl.OrderFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
+import ms.restaurant.domain.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +38,13 @@ public class OrderController {
         return orderFacadeImpl.add(orderDTO);
     }
 
-    @PutMapping("/update/{orderId}")
-    public void update(@Valid @RequestBody OrderDTO orderDTO, @PathVariable Long orderId) {
-        orderFacadeImpl.update(orderDTO, orderId);
-    }
+//    @PutMapping("/update/{orderId}")
+//    public void update(@Valid @RequestBody OrderDTO orderDTO, @PathVariable Long orderId) {
+//        orderFacadeImpl.update(orderDTO, orderId);
+//    }
 
+    @PutMapping("/update/status/{orderId}")
+    public void updateStatus(@Valid @RequestBody OrderStatusDTO orderStatusDTO, @PathVariable Long orderId) {
+        orderFacadeImpl.updateStatus(orderStatusDTO, orderId);
+    }
 }
