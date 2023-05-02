@@ -6,7 +6,6 @@ import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facade.CRUDFacade;
-import ms.restaurant.domain.facade.DishFacade;
 import ms.restaurant.domain.model.Dish;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Product;
@@ -14,7 +13,6 @@ import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 

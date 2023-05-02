@@ -1,4 +1,4 @@
-package ms.restaurant.application.dto.menuDto;
+package ms.restaurant.application.dto.restaurantDto;
 
 
 import jakarta.validation.constraints.NotBlank;

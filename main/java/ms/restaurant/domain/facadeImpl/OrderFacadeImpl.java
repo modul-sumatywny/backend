@@ -2,8 +2,6 @@ package ms.restaurant.domain.facadeImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import ms.restaurant.application.dto.dishDto.DishDTO;
-import ms.restaurant.application.dto.menuDto.RestaurantDTO;
 import ms.restaurant.application.dto.orderDto.OrderDTO;
 import ms.restaurant.application.dto.orderDto.OrderStatusDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
@@ -11,27 +9,23 @@ import ms.restaurant.domain.facade.OrderFacade;
 import ms.restaurant.domain.model.*;
 import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.OrderRepository;
-import ms.restaurant.infrastructure.repository.ProductRepository;
 import ms.restaurant.infrastructure.repository.RestaurantRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
+public class OrderFacadeImpl implements CRUDFacade<OrderDTO>, OrderFacade{
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
-    private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -107,6 +101,7 @@ public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
         return new IDObject(newOrder.getId());
     }
 
+    @Override
     public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with this ID doesn't exist in database"));
         order.setOrderStatus(Order.OrderStatus.valueOf(orderStatusDTO.getOrderStatus()));

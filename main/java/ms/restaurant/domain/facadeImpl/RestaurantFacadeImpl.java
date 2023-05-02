@@ -2,20 +2,20 @@ package ms.restaurant.domain.facadeImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
-import ms.restaurant.application.dto.menuDto.RestaurantDTO;
+import ms.restaurant.application.dto.restaurantDto.RestaurantDTO;
+import ms.restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
+import ms.restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
-import ms.restaurant.domain.facade.RestaurantFacade;
-import ms.restaurant.domain.model.Dish;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Menu;
 import ms.restaurant.domain.model.Restaurant;
+import ms.restaurant.domain.model.RestaurantTable;
 import ms.restaurant.infrastructure.repository.MenuRepository;
 import ms.restaurant.infrastructure.repository.RestaurantRepository;
+import ms.restaurant.infrastructure.repository.RestaurantTableRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +26,7 @@ import java.util.*;
 public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
+    private final RestaurantTableRepository restaurantTableRepository;
     private final ModelMapper modelMapper;
 
 //    @Override
@@ -119,59 +120,46 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
         }
     }
 
-//    @Override
-//    public ResponseEntity<Map<String, String>> getRestaurant(Long id) {
-//        if (restaurantRepository.existsById(id)) {
-//            Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-//            if (restaurant.isPresent()) {
-//                Map<String, String> responseMap = new LinkedHashMap<>();
-//                responseMap.put("name", restaurant.get().getName());
-//                responseMap.put("phoneNumber", String.valueOf(restaurant.get().getPhoneNumber())); //phoneNumber konwertowany do Stringa jak cos
-//                responseMap.put("address", restaurant.get().getAddress());
-//
-//                return ResponseEntity.ok(responseMap);
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-//            }
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-//        }
-//    }
+    @Transactional
+    public void addTableToRestaurant(RestaurantTableDTO restaurantTableDTO, Long id) {
+        RestaurantTable restaurantTable = toTableFromDTO(restaurantTableDTO);
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
 
-//    @Override
-//    public Optional<RestaurantDTO> get(Long id) {
-//        if (restaurantRepository.existsById(id)) {
-//            Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-//            if (restaurant.isPresent()) {
-//                return Optional.ofNullable(toRestaurantDTO(restaurant));
-//            } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-//            }
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-//        }
-//    }
-//
-//    @Override
-//    public void delete(Long id) {
-//
-//    }
-//
-//    @Override
-//    public void update(RestaurantDTO restaurantDTO, Long id) {
-//
-//    }
-//
-//    @Override
-//    public IDObject add(RestaurantDTO restaurantDTO) {
-//        if (!restaurantRepository.existsByAddress(restaurantDTO.getAddress())) {
-//            Restaurant newRestaurant = toRestaurantFromDTO(restaurantDTO);
-//            restaurantRepository.save(newRestaurant);
-//            return new IDObject(newRestaurant.getId());
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with that address already exist in database");
-//        }
-//    }
+        boolean flag = false;
+        for (RestaurantTable restaurantTableFromList : restaurant.getRestaurantTables()) {
+            if (restaurantTableFromList.getTableNumber().equals(restaurantTable.getTableNumber())) {
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            restaurant.getRestaurantTables().add(restaurantTable);
+            restaurantRepository.save(restaurant);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This restaurant already have this table with that exact number");
+        }
+        //  return new IDObject(menu.getId());
+    }
+
+    @Transactional
+    public void deleteTableFromRestaurant(TableNumberDTO tableNumberDTO, Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
+        List<RestaurantTable> restaurantTableListCopy = new ArrayList<>(restaurant.getRestaurantTables());
+
+        boolean flag = false;
+        for (RestaurantTable restaurantTableFromList : restaurantTableListCopy) {
+            if (restaurantTableFromList.getTableNumber().equals(tableNumberDTO.getTableNumber())) {
+                restaurant.getRestaurantTables().remove(restaurantTableFromList);
+                restaurantTableRepository.delete(restaurantTableFromList);
+                restaurantRepository.save(restaurant);
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with given ID doesnt have table with given table number" );
+        }
+    }
 
     public Restaurant toRestaurantFromDTO(RestaurantDTO restaurantDTO) {
         return modelMapper.map(restaurantDTO, Restaurant.class);
@@ -185,4 +173,7 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
         return modelMapper.map(menuDTO, Menu.class);
     }
 
+    public RestaurantTable toTableFromDTO(RestaurantTableDTO restaurantTableDTO) {
+        return modelMapper.map(restaurantTableDTO, RestaurantTable.class);
+    }
 }

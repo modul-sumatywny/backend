@@ -1,30 +1,24 @@
 package ms.restaurant.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "PRODUCTS")
-public class Product {
+@Table(name = "TABLES")
+public class RestaurantTable {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "table_id", nullable = false)
     private Long id;
 
     @Column
-    private String name;
+    private Integer tableNumber;
 
     @Column
-    private String ean;
+    private Integer numberOfSeats;
 }

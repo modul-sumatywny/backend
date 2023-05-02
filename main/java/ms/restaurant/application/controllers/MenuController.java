@@ -3,9 +3,9 @@ package ms.restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import ms.restaurant.application.dto.dishDto.DishDTO;
+import ms.restaurant.application.dto.dishDto.DishNameDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
 import ms.restaurant.domain.facadeImpl.MenuFacadeImpl;
-import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +47,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/delete/dish/{menuId}")
-    public void deleteDishFromMenu(@RequestBody DishDTO dishDTO, @PathVariable Long menuId) {
-        menuFacadeImpl.deleteDishFromMenu(dishDTO, menuId);
+    public void deleteDishFromMenu(@RequestBody DishNameDTO dishNameDTO, @PathVariable Long menuId) {
+        menuFacadeImpl.deleteDishFromMenu(dishNameDTO, menuId);
     }
 }

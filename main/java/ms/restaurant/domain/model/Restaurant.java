@@ -2,6 +2,7 @@ package ms.restaurant.domain.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,4 +33,8 @@ public class Restaurant {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")
     private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private List<RestaurantTable> restaurantTables = new ArrayList<>();
 }

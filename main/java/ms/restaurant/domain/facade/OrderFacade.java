@@ -1,9 +1,10 @@
 package ms.restaurant.domain.facade;
 
+import ms.restaurant.application.dto.orderDto.OrderStatusDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 public interface OrderFacade {
-//    ResponseEntity<Map<String, String>> getOrder(Long id);
+    public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId);
 }

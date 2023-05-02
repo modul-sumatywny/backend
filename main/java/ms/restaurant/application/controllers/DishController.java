@@ -6,7 +6,6 @@ import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facadeImpl.DishFacadeImpl;
-import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

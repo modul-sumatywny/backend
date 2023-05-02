@@ -1,6 +1,7 @@
 package ms.restaurant.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

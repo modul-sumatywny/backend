@@ -3,19 +3,16 @@ package ms.restaurant.domain.facadeImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.dishDto.DishDTO;
+import ms.restaurant.application.dto.dishDto.DishNameDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
-import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
-import ms.restaurant.domain.facade.MenuFacade;
 import ms.restaurant.domain.model.Dish;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Menu;
-import ms.restaurant.domain.model.Product;
 import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.MenuRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -100,13 +97,13 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO> {
     }
 
     @Transactional
-    public void deleteDishFromMenu(DishDTO dishDTO, Long menuId) {
+    public void deleteDishFromMenu(DishNameDTO dishNameDTO, Long menuId) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
         List<Dish> dishListCopy = new ArrayList<>(menu.getDishes());
 
         boolean flag = false;
         for (Dish dishFromList : dishListCopy) {
-            if (dishFromList.getName().equals(dishDTO.getName())) {
+            if (dishFromList.getName().equals(dishNameDTO.getName())) {
                 menu.getDishes().remove(dishFromList);
                 dishRepository.delete(dishFromList);
                 menuRepository.save(menu);

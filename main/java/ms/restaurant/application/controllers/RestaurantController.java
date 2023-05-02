@@ -2,7 +2,9 @@ package ms.restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
-import ms.restaurant.application.dto.menuDto.RestaurantDTO;
+import ms.restaurant.application.dto.restaurantDto.RestaurantDTO;
+import ms.restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
+import ms.restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import ms.restaurant.domain.facadeImpl.RestaurantFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class RestaurantController {
         restaurantFacadeImpl.update(restaurantDTO, restaurantId);
     }
 
+    @DeleteMapping("/delete/{restaurantId}")
+    public void deleteRestaurant(@PathVariable Long restaurantId) { restaurantFacadeImpl.delete(restaurantId); }
+
+
     @PostMapping("/add/menu/{restaurantId}")
     public void addMenuToRestaurant(@Valid @RequestBody MenuDTO menuDTO, @PathVariable Long restaurantId) {
         restaurantFacadeImpl.addMenuToRestaurant(menuDTO, restaurantId);
@@ -40,5 +46,15 @@ public class RestaurantController {
     @DeleteMapping("/delete/menu/{restaurantId}")
     public void deleteMenuFromRestaurant(@RequestBody MenuDTO menuDTO, @PathVariable Long restaurantId) {
         restaurantFacadeImpl.deleteMenuFromRestaurant(menuDTO, restaurantId);
+    }
+
+    @PostMapping("/add/table/{restaurantId}")
+    public void addTableToRestaurant(@Valid @RequestBody RestaurantTableDTO restaurantTableDTO, @PathVariable Long restaurantId) {
+        restaurantFacadeImpl.addTableToRestaurant(restaurantTableDTO, restaurantId);
+    }
+
+    @DeleteMapping("/delete/table/{restaurantId}")
+    public void deleteTableFromRestaurant(@RequestBody TableNumberDTO tableNumberDTO, @PathVariable Long restaurantId) {
+        restaurantFacadeImpl.deleteTableFromRestaurant(tableNumberDTO, restaurantId);
     }
 }
