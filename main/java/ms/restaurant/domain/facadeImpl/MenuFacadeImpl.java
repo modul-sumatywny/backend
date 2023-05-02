@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
-import ms.restaurant.application.dto.UpdateMenuDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
 import ms.restaurant.domain.facade.MenuFacade;
 import ms.restaurant.domain.model.Dish;
@@ -20,9 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -49,15 +46,11 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
 
     @Override
     public void update(MenuDTO menuDTO, Long id) {
-
-    }
-
-    public void update(UpdateMenuDTO updateMenuDTO, Long id) {
         Menu existingMenu = menuRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesnt exists in database!"));
 
         if (menuRepository.existsById(id)) {
             existingMenu.setId(id);
-            existingMenu.setName(updateMenuDTO.getName());
+            existingMenu.setName(menuDTO.getName());
             menuRepository.save(existingMenu);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Menu just got updated");
         } else {
@@ -80,19 +73,46 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         return new IDObject(menu.getId());
     }
 
-//    @Transactional
-//    public void addDishToMenu(DishDTO dishDTO, Long id) {
-//        Dish dish = toDishFromDTO(dishDTO);
-//        Menu menu = menuRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
-//
-//        if (!dishRepository.existsByEan(product.getEan())) {
-//            dish.getProducts().add(product);
-//            dishRepository.save(dish);
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dish already consist product with this EAN");
-//        }
-////        return new IDObject(product.getId());
-//    }
+    @Transactional
+    public void addDishToMenu(DishDTO dishDTO, Long id) {
+        Dish dish = toDishFromDTO(dishDTO);
+        Menu menu = menuRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
+
+        boolean flag = false;
+        for (Dish dishesFromList : menu.getDishes()) {
+            if (dishesFromList.getName().equals(dish.getName())) {
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            menu.getDishes().add(dish);
+            menuRepository.save(menu);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This menu already have this dish with that name");
+        }
+//        return new IDObject(product.getId());
+    }
+
+    @Transactional
+    public void deleteDishFromMenu(DishDTO dishDTO, Long dishId) {
+        Menu menu = menuRepository.findById(dishId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
+        List<Dish> dishListCopy = new ArrayList<>(menu.getDishes());
+
+        boolean flag = false;
+        for (Dish dishFromList : dishListCopy) {
+            if (dishFromList.getName().equals(dishDTO.getName())) {
+                menu.getDishes().remove(dishFromList);
+                dishRepository.delete(dishFromList);
+                menuRepository.save(menu);
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with given ID doesnt have dish with given name" );
+        }
+    }
 
     @Override
     public ResponseEntity<Map<String, String>> getMenu(Long id) {
@@ -109,101 +129,6 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
         }
     }
-
-
-
-//    @Override
-//    public Optional<MenuDTO> get(Long id) {
-//        Optional<Menu> menu = menuRepository.findById(id);
-//        if (menu.isPresent()) {
-//            return Optional.ofNullable(toMenuDTO(menu));
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-//        }
-//    }
-//
-//    @Override
-//    public void delete(Long id) {
-//        if (menuRepository.existsById(id)) {
-//            menuRepository.deleteById(id);
-//            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-//        }
-//    }
-//
-//    @Override
-//    public void update(MenuDTO menuDTO, Long id) {
-//
-//    }
-//
-//    @Transactional
-//    @Override
-//    public IDObject add(MenuDTO menuDTO) {
-//        for (Dish d : menuDTO.getDishes()) {
-////            if (!dishRepository.existsByName(d.getName())) {
-////                DishDTO newDish = toDishDTO(Optional.ofNullable(d));
-////                dishFacadeImpl.add(newDish);
-////            }
-//            Optional<Dish> existingDish = dishRepository.findByName(d.getName());
-//            if (existingDish.isPresent()) {
-//                d.setId(existingDish.get().getId());
-//            } else {
-//                DishDTO newDish = toDishDTO(Optional.ofNullable(d));
-//                dishFacadeImpl.addDishWithGivenID(newDish, d.getId());
-//            }
-//        }
-//        Menu menu = toMenuFromDTO(menuDTO);
-//        if (!menuRepository.existsByName(menu.getName())) {
-//            menuRepository.save(menu);
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Menu with this name already exists in database!");
-//
-//        }
-////        if(!menuRepository.existsById(menu.getId())) {
-////            menuRepository.save(menu);
-////        } else {
-////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Menu with this id already exists in database!");
-////        }
-//        return new IDObject(menu.getId());
-//    }
-//
-//    public List<Dish> getDishesByMenuId(Long id) {
-//        Optional<Menu> menu = menuRepository.findById(id);
-//        if (menu.isPresent()) {
-//            return menu.get().getDishes();
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-//        }
-//    }
-//
-//    public DishDTO addDishToMenu(Long id, DishDTO dishDTO) {
-//        Optional<Menu> menu = menuRepository.findById(id);
-//        if (menu.isPresent()) {
-//            Menu updatedMenu = menu.get();
-//            List<Dish> dishes = updatedMenu.getDishes();
-//            dishes.add(toDishFromDTO(dishDTO));
-//            updatedMenu.setDishes(dishes);
-//            dishFacadeImpl.add(dishDTO);
-//            return toDishDTO(Optional.ofNullable(menuRepository.save(updatedMenu).getDishes().get(dishes.size() - 1)));
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-//        }
-//    }
-//
-//    public void removeDishFromMenu(Long menuId, Long dishId) {
-//        Optional<Menu> menu = menuRepository.findById(menuId);
-//        if (menu.isPresent()) {
-//            Menu updatedMenu = menu.get();
-//            List<Dish> dishes = updatedMenu.getDishes();
-//            dishes.removeIf(dish -> dish.getId().equals(dishId));
-//            updatedMenu.setDishes(dishes);
-//            dishFacadeImpl.delete(dishId);
-//            menuRepository.save(updatedMenu);
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-//        }
-//    }
 
     public Dish toDishFromDTO(DishDTO dishDTO) {
         return modelMapper.map(dishDTO, Dish.class);

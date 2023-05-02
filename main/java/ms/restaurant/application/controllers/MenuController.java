@@ -2,6 +2,7 @@ package ms.restaurant.application.controllers;
 
 
 import jakarta.validation.Valid;
+import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
 import ms.restaurant.domain.facadeImpl.MenuFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
@@ -30,9 +31,23 @@ public class MenuController {
 //    public DishDTO addDishToMenu(@PathVariable Long id, @Valid @RequestBody DishDTO dishDTO) {
 //        return menuFacadeImpl.addDishToMenu(id, dishDTO);
 //    }
+    @PutMapping("/update/{id}")
+    public void updateMenu(@Valid @RequestBody MenuDTO menuDTO, @PathVariable Long id) {
+        menuFacadeImpl.update(menuDTO, id);
+    }
 
     @PostMapping("/add")
     public IDObject addMenu(@Valid @RequestBody MenuDTO menuDTO) {
         return menuFacadeImpl.add(menuDTO);
+    }
+
+    @PostMapping("/add/dish/{menuId}")
+    public void addDishToMenu(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long menuId) {
+        menuFacadeImpl.addDishToMenu(dishDTO, menuId);
+    }
+
+    @DeleteMapping("/delete/dish/{menuId}")
+    public void deleteDishFromMenu(@RequestBody DishDTO dishDTO, @PathVariable Long menuId) {
+        menuFacadeImpl.deleteDishFromMenu(dishDTO, menuId);
     }
 }

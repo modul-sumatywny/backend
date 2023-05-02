@@ -33,7 +33,8 @@ public class Dish {
     private List<Product> products = new ArrayList<>();
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
+
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "menu_id")
+//    private Menu menu;
 }

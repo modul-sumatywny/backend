@@ -1,5 +1,6 @@
 package ms.restaurant.application.dto.menuDto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,7 +17,8 @@ public class MenuDTO {
     @NotBlank(message = "Name of menu cannot be blank")
     private String name;
 
-    @NotNull
-    @Size(min = 1, message = "There must be at least 1 dish in menu")
-    private List<Dish> dishes;
+//    @NotNull
+//    @Size(min = 1, message = "There must be at least 1 dish in menu")
+//    @Valid
+//    private List<@NotNull @Valid Dish> dishes;
 }

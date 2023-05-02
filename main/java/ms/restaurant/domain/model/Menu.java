@@ -26,9 +26,8 @@ public class Menu {
 //   // @JoinColumn(name = "menu_id", referencedColumnName = "id", nullable = false)
 //    private List<Dish> dishes = new ArrayList<>();
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "menu_id", nullable = true)
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "menu_id")
     private List<Dish> dishes = new ArrayList<>();
 
 //    @OneToOne(mappedBy = "menu")

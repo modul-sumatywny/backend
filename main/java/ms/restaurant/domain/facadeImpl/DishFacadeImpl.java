@@ -3,7 +3,6 @@ package ms.restaurant.domain.facadeImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.dishDto.DishDTO;
-import ms.restaurant.application.dto.dishDto.UpdateDishDTO;
 import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facade.CRUDFacade;
@@ -45,16 +44,13 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
 
     @Override
     public void update(DishDTO dishDTO, Long id) {
-
-    }
-    public void update(UpdateDishDTO updateDishDTO, Long id) {
         Dish existingDish = dishRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesnt exists in database!"));
 
         if (dishRepository.existsById(id)) {
             existingDish.setId(id);
-            existingDish.setName(updateDishDTO.getName());
-            existingDish.setPrice(updateDishDTO.getPrice());
-            existingDish.setCategory(updateDishDTO.getCategory());
+            existingDish.setName(dishDTO.getName());
+            existingDish.setPrice(dishDTO.getPrice());
+            existingDish.setCategory(dishDTO.getCategory());
             dishRepository.save(existingDish);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Dish just got updated");
         } else {
@@ -62,18 +58,24 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
         }
     }
 
-    @Override
-    @Transactional
-    public IDObject add(DishDTO dishDTO) {
-        Dish dish = toDishFromDTO(dishDTO);
-        if(!dishRepository.existsByName(dish.getName())) {
-            dishRepository.save(dish);
-            productRepository.saveAll(dish.getProducts());
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with this name already exists in database!");
-        }
-        return new IDObject(dish.getId());
-    }
+
+
+    //to jest raczej niepotrzebne. Bez sensu dodawac danie, ktore nie jest przypisane do zadnego menu
+//    @Override
+//    @Transactional
+//    public IDObject add(DishDTO dishDTO) {
+//        Dish dish = toDishFromDTO(dishDTO);
+////        if(!dishRepository.existsByName(dish.getName())) {
+////            dishRepository.save(dish);
+////            productRepository.saveAll(dish.getProducts());
+////        } else {
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with this name already exists in database!");
+////        }
+//
+//        dishRepository.save(dish);
+//        productRepository.saveAll(dish.getProducts());
+//        return new IDObject(dish.getId());
+//    }
 
     @Transactional
     public void addProductToDish(ProductDTO productDTO, Long id) {
@@ -116,29 +118,6 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
         }
     }
 
-//    @Transactional
-//    public void addDishWithGivenID(DishDTO dishDTO, Long id) {
-//        Dish dish = toDishFromDTO(dishDTO);
-//        dish.setId(id);
-//
-//        for (Product product : dish.getProducts()) {
-//            Optional<Product> existingProduct = productRepository.findByEan(product.getEan());
-//            if (existingProduct.isPresent()) {
-//                product.setId(existingProduct.get().getId());
-//            } else {
-//                productRepository.save(product);
-//            }
-//        }
-//
-//        if(!dishRepository.existsByName(dish.getName())) {
-//            dishRepository.save(dish);
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dish with this name already exists in database!");
-//        }
-//    }
-
-
-
     @Override
     public ResponseEntity<Map<String, String>> getDish(Long id) {
         if (dishRepository.existsById(id)) {
@@ -147,7 +126,7 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
                 Map<String, String> responseMap = new LinkedHashMap<>();
                 responseMap.put("name", dish.get().getName());
                 responseMap.put("price", dish.get().getPrice().toString()); //int zwracany jako String
-                responseMap.put("category", dish.get().getCategory()); //int zwracany jako String
+                responseMap.put("category", dish.get().getCategory());
                 return ResponseEntity.ok(responseMap);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesn't exist in database");
@@ -155,6 +134,11 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesn't exist in database");
         }
+    }
+
+    @Override
+    public IDObject add(DishDTO dishDTO) {
+        return null;
     }
 
     public Product toProductFromDTO(ProductDTO productDTO) {

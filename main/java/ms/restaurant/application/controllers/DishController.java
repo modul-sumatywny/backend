@@ -3,7 +3,6 @@ package ms.restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import ms.restaurant.application.dto.dishDto.DishDTO;
-import ms.restaurant.application.dto.dishDto.UpdateDishDTO;
 import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facadeImpl.DishFacadeImpl;
@@ -36,13 +35,13 @@ public class DishController {
     public void deleteDish(@PathVariable Long id) { dishFacadeImpl.delete(id); }
 
     @PutMapping("/update/{id}")
-    public void updateDish(@Valid @RequestBody UpdateDishDTO updateDishDTO, @PathVariable Long id) {
-        dishFacadeImpl.update(updateDishDTO, id);
+    public void updateDish(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long id) {
+        dishFacadeImpl.update(dishDTO, id);
     }
 
-    @PostMapping("/add/product/{id}")
-    public void addProductToDish(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
-        dishFacadeImpl.addProductToDish(productDTO, id);
+    @PostMapping("/add/product/{dishId}")
+    public void addProductToDish(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long dishId) {
+        dishFacadeImpl.addProductToDish(productDTO, dishId);
     }
 
     @DeleteMapping("/delete/product/{dishId}")
