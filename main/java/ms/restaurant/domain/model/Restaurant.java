@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -14,7 +17,7 @@ public class Restaurant {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "restaurant_id", nullable = false)
     private Long id;
 
     @Column
@@ -25,6 +28,10 @@ public class Restaurant {
 
     @Column
     private String address;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private List<Menu> menus = new ArrayList<>();
 
 //    @OneToOne
 //    @JoinColumn(name = "menu_id")

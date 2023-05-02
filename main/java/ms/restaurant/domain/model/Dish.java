@@ -16,7 +16,7 @@ public class Dish {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "dish_id", nullable = false)
     private Long id;
 
     @Column

@@ -125,7 +125,7 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
             if (dish.isPresent()) {
                 Map<String, String> responseMap = new LinkedHashMap<>();
                 responseMap.put("name", dish.get().getName());
-                responseMap.put("price", dish.get().getPrice().toString()); //int zwracany jako String
+                responseMap.put("price", String.valueOf(dish.get().getPrice())); //int zwracany jako String
                 responseMap.put("category", dish.get().getCategory());
                 return ResponseEntity.ok(responseMap);
             } else {

@@ -36,10 +36,11 @@ public class MenuController {
         menuFacadeImpl.update(menuDTO, id);
     }
 
-    @PostMapping("/add")
-    public IDObject addMenu(@Valid @RequestBody MenuDTO menuDTO) {
-        return menuFacadeImpl.add(menuDTO);
-    }
+    //raczej niepotrzebne bo nie bedziemy dodawac bez przypisania menu go do restauracji
+//    @PostMapping("/add")
+//    public IDObject addMenu(@Valid @RequestBody MenuDTO menuDTO) {
+//        return menuFacadeImpl.add(menuDTO);
+//    }
 
     @PostMapping("/add/dish/{menuId}")
     public void addDishToMenu(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long menuId) {

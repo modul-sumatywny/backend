@@ -12,8 +12,6 @@ import ms.restaurant.domain.model.Menu;
 import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.MenuRepository;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
     private final ModelMapper modelMapper;
-    private static final Logger log = LoggerFactory.getLogger(MenuFacadeImpl.class);
 
     @Override
     public Optional<MenuDTO> get(Long id) {
@@ -58,20 +55,25 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         }
     }
 
+    //musi byc bo implementuje CRUDFacade i nadpisuje jego metode
     @Override
-    @Transactional
     public IDObject add(MenuDTO menuDTO) {
-        Menu menu = toMenuFromDTO(menuDTO);
-        if(!menuRepository.existsByName(menu.getName())) {
-            dishRepository.saveAll(menu.getDishes());
-            menuRepository.save(menu);
-            log.info("Menu updated: {}", menu);
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Menu with this name already exists in database!");
-        }
-        return new IDObject(menu.getId());
+        return null;
     }
+
+    //to tez jest raczej niepotrzebne. Bez sensu dodawac menu, ktore nie jest przypisane do zadnegj restauracji
+//    @Override
+//    @Transactional
+//    public IDObject add(MenuDTO menuDTO) {
+//        Menu menu = toMenuFromDTO(menuDTO);
+//        if(!menuRepository.existsByName(menu.getName())) {
+//            dishRepository.saveAll(menu.getDishes());
+//            menuRepository.save(menu);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Menu with this name already exists in database!");
+//        }
+//        return new IDObject(menu.getId());
+//    }
 
     @Transactional
     public void addDishToMenu(DishDTO dishDTO, Long id) {
@@ -79,8 +81,8 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         Menu menu = menuRepository.findById(id).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
 
         boolean flag = false;
-        for (Dish dishesFromList : menu.getDishes()) {
-            if (dishesFromList.getName().equals(dish.getName())) {
+        for (Dish dishFromList : menu.getDishes()) {
+            if (dishFromList.getName().equals(dish.getName())) {
                 flag = true;
             }
         }
@@ -95,8 +97,8 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
     }
 
     @Transactional
-    public void deleteDishFromMenu(DishDTO dishDTO, Long dishId) {
-        Menu menu = menuRepository.findById(dishId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
+    public void deleteDishFromMenu(DishDTO dishDTO, Long menuId) {
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesnt exists in database!"));
         List<Dish> dishListCopy = new ArrayList<>(menu.getDishes());
 
         boolean flag = false;

@@ -26,10 +26,11 @@ public class DishController {
         return dishFacadeImpl.getDish(id);
     }
 
-    @PostMapping("/add")
-    public IDObject addDish(@Valid @RequestBody DishDTO dishDTO) {
-        return dishFacadeImpl.add(dishDTO);
-    }
+    //raczej niepotrzebne bo nie bedziemy dodawac bez przypisania go do menu
+//    @PostMapping("/add")
+//    public IDObject addDish(@Valid @RequestBody DishDTO dishDTO) {
+//        return dishFacadeImpl.add(dishDTO);
+//    }
 
     @DeleteMapping("/delete/{id}")
     public void deleteDish(@PathVariable Long id) { dishFacadeImpl.delete(id); }
