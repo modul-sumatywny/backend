@@ -4,6 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
-public interface RestaurantFacade {
-//    ResponseEntity<Map<String, String>> getRestaurant(Long id);
+public interface OrderFacade {
+//    ResponseEntity<Map<String, String>> getOrder(Long id);
 }

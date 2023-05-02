@@ -22,14 +22,15 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
+public class DishFacadeImpl implements CRUDFacade<DishDTO> {
     private final DishRepository dishRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public Optional<DishDTO> get(Long id) {
-        return Optional.empty();
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish not found"));
+        return Optional.ofNullable(toDishDTO(dish));
     }
 
     @Override
@@ -115,24 +116,6 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO>, DishFacade {
 
         if (!flag) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with given ID doesnt have product with given EAN" );
-        }
-    }
-
-    @Override
-    public ResponseEntity<Map<String, String>> getDish(Long id) {
-        if (dishRepository.existsById(id)) {
-            Optional<Dish> dish = dishRepository.findById(id);
-            if (dish.isPresent()) {
-                Map<String, String> responseMap = new LinkedHashMap<>();
-                responseMap.put("name", dish.get().getName());
-                responseMap.put("price", String.valueOf(dish.get().getPrice())); //int zwracany jako String
-                responseMap.put("category", dish.get().getCategory());
-                return ResponseEntity.ok(responseMap);
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesn't exist in database");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with this ID doesn't exist in database");
         }
     }
 

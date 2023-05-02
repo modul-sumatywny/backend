@@ -15,9 +15,5 @@ public class ProductDTO {
 
     @NotBlank(message = "EAN number of product cannot be blank")
     private String ean;
-
-//    @NotNull
-//    @Size(min = 1, message = "There must be at least 1 dish connected with this product")
-//    private List<Dish> dishes;
 }
 

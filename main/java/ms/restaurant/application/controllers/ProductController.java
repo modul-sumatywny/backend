@@ -2,13 +2,12 @@ package ms.restaurant.application.controllers;
 
 import ms.restaurant.domain.facadeImpl.ProductFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ms.restaurant.application.dto.productDto.ProductDTO;
 
 import jakarta.validation.*;
 
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -18,9 +17,9 @@ public class ProductController {
     @Autowired
     public ProductController(ProductFacadeImpl productFacadeImpl) { this.productFacadeImpl = productFacadeImpl; }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, String>> getProduct(@PathVariable Long id) {
-        return productFacadeImpl.getProduct(id);
+    @GetMapping("/{productId}")
+    public Optional<ProductDTO> getProduct(@PathVariable Long productId) {
+        return productFacadeImpl.get(productId);
     }
 
     //nie można dodawać bezposrednio produktu bo kazdy produkt musi miec przypisane danie. Produkt mozna dodawac w kontrolerze Dish
@@ -29,12 +28,12 @@ public class ProductController {
 //        return productFacadeImpl.addProductToDish(productDTO, id);
 //    }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteProduct(@PathVariable Long id) { productFacadeImpl.delete(id); }
+    @DeleteMapping("/delete/{productId}")
+    public void deleteProduct(@PathVariable Long productId) { productFacadeImpl.delete(productId); }
 
-    @PutMapping("/update/{id}")
-    public void updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
-        productFacadeImpl.update(productDTO, id);
+    @PutMapping("/update/{productId}")
+    public void updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long productId) {
+        productFacadeImpl.update(productDTO, productId);
     }
 }
 

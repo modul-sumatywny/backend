@@ -23,14 +23,20 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO>, RestaurantFacade {
+public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
     private final ModelMapper modelMapper;
 
+//    @Override
+//    public Optional<RestaurantDTO> get(Long id) {
+//        return Optional.empty();
+//    }
+
     @Override
     public Optional<RestaurantDTO> get(Long id) {
-        return Optional.empty();
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+        return Optional.ofNullable(toRestaurantDTO(restaurant));
     }
 
     @Override
@@ -64,7 +70,7 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO>, Restaura
     public IDObject add(RestaurantDTO restaurantDTO) {
         Restaurant restaurant = toRestaurantFromDTO(restaurantDTO);
         if(!restaurantRepository.existsByAddress(restaurant.getAddress())) {
-            menuRepository.saveAll(restaurant.getMenus());
+            //menuRepository.saveAll(restaurant.getMenus());
             restaurantRepository.save(restaurant);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Restaurant with address name already exists in database!");
@@ -88,9 +94,9 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO>, Restaura
             restaurant.getMenus().add(menu);
             restaurantRepository.save(restaurant);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This restaurann already have this menu with that name");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This restaurant already have this menu with that name");
         }
-//        return new IDObject(product.getId());
+      //  return new IDObject(menu.getId());
     }
 
     @Transactional
@@ -113,24 +119,24 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO>, Restaura
         }
     }
 
-    @Override
-    public ResponseEntity<Map<String, String>> getRestaurant(Long id) {
-        if (restaurantRepository.existsById(id)) {
-            Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-            if (restaurant.isPresent()) {
-                Map<String, String> responseMap = new LinkedHashMap<>();
-                responseMap.put("name", restaurant.get().getName());
-                responseMap.put("phoneNumber", String.valueOf(restaurant.get().getPhoneNumber())); //phoneNumber konwertowany do Stringa jak cos
-                responseMap.put("address", restaurant.get().getAddress());
-
-                return ResponseEntity.ok(responseMap);
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
-        }
-    }
+//    @Override
+//    public ResponseEntity<Map<String, String>> getRestaurant(Long id) {
+//        if (restaurantRepository.existsById(id)) {
+//            Optional<Restaurant> restaurant = restaurantRepository.findById(id);
+//            if (restaurant.isPresent()) {
+//                Map<String, String> responseMap = new LinkedHashMap<>();
+//                responseMap.put("name", restaurant.get().getName());
+//                responseMap.put("phoneNumber", String.valueOf(restaurant.get().getPhoneNumber())); //phoneNumber konwertowany do Stringa jak cos
+//                responseMap.put("address", restaurant.get().getAddress());
+//
+//                return ResponseEntity.ok(responseMap);
+//            } else {
+//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
+//            }
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesn't exist in database");
+//        }
+//    }
 
 //    @Override
 //    public Optional<RestaurantDTO> get(Long id) {
@@ -171,7 +177,7 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO>, Restaura
         return modelMapper.map(restaurantDTO, Restaurant.class);
     }
 
-    public RestaurantDTO toRestaurantDTO(Optional<Restaurant> restaurant) {
+    public RestaurantDTO toRestaurantDTO(Restaurant restaurant) {
         return modelMapper.map(restaurant, RestaurantDTO.class);
     }
 

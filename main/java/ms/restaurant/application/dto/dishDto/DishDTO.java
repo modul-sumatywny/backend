@@ -23,10 +23,4 @@ public class DishDTO {
 
     @NotBlank(message = "Category of dish cannot be blank")
     private String category;
-
-
-//    @NotNull
-//    @Size(min = 1, message = "There must be at least 1 ingredient for dish")
-//    @Valid
-//    private List<@Valid Product> products;
 }

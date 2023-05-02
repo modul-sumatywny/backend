@@ -32,7 +32,8 @@ public class Dish {
     @JoinColumn(name = "dish_id")
     private List<Product> products = new ArrayList<>();
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "dishes")
+    private List<Order> orders = new ArrayList<>();
 
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "menu_id")

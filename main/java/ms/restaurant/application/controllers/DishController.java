@@ -8,10 +8,9 @@ import ms.restaurant.application.dto.productDto.ProductEanDto;
 import ms.restaurant.domain.facadeImpl.DishFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/dishes")
@@ -21,9 +20,9 @@ public class DishController {
     @Autowired
     public DishController(DishFacadeImpl dishFacadeImpl) {this.dishFacadeImpl = dishFacadeImpl;}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, String>> getDish(@PathVariable Long id) {
-        return dishFacadeImpl.getDish(id);
+    @GetMapping("/{dishId}")
+    public Optional<DishDTO> getDish(@PathVariable Long dishId) {
+        return dishFacadeImpl.get(dishId);
     }
 
     //raczej niepotrzebne bo nie bedziemy dodawac bez przypisania go do menu
@@ -32,12 +31,12 @@ public class DishController {
 //        return dishFacadeImpl.add(dishDTO);
 //    }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteDish(@PathVariable Long id) { dishFacadeImpl.delete(id); }
+    @DeleteMapping("/delete/{dishId}")
+    public void deleteDish(@PathVariable Long dishId) { dishFacadeImpl.delete(dishId); }
 
-    @PutMapping("/update/{id}")
-    public void updateDish(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long id) {
-        dishFacadeImpl.update(dishDTO, id);
+    @PutMapping("/update/{dishId}")
+    public void updateDish(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long dishId) {
+        dishFacadeImpl.update(dishDTO, dishId);
     }
 
     @PostMapping("/add/product/{dishId}")
@@ -46,7 +45,7 @@ public class DishController {
     }
 
     @DeleteMapping("/delete/product/{dishId}")
-    public void deleteProductFromDish(@RequestBody ProductEanDto productEanDTO, @PathVariable Long dishId) {
+    public void deleteProductFromDish(@Valid @RequestBody ProductEanDto productEanDTO, @PathVariable Long dishId) {
         dishFacadeImpl.deleteProductFromDish(productEanDTO, dishId);
     }
 }

@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ms.restaurant.application.dto.dishDto.DishDTO;
 import ms.restaurant.application.dto.menuDto.MenuDTO;
+import ms.restaurant.application.dto.productDto.ProductDTO;
 import ms.restaurant.domain.facade.CRUDFacade;
 import ms.restaurant.domain.facade.MenuFacade;
 import ms.restaurant.domain.model.Dish;
 import ms.restaurant.domain.model.IDObject;
 import ms.restaurant.domain.model.Menu;
+import ms.restaurant.domain.model.Product;
 import ms.restaurant.infrastructure.repository.DishRepository;
 import ms.restaurant.infrastructure.repository.MenuRepository;
 import org.modelmapper.ModelMapper;
@@ -21,14 +23,15 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
+public class MenuFacadeImpl implements CRUDFacade<MenuDTO> {
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public Optional<MenuDTO> get(Long id) {
-        return Optional.empty();
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu not found"));
+        return Optional.ofNullable(toMenuDTO(menu));
     }
 
     @Override
@@ -93,7 +96,7 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This menu already have this dish with that name");
         }
-//        return new IDObject(product.getId());
+      //  return new IDObject(dish.getId());
     }
 
     @Transactional
@@ -116,22 +119,6 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         }
     }
 
-    @Override
-    public ResponseEntity<Map<String, String>> getMenu(Long id) {
-        if (menuRepository.existsById(id)) {
-            Optional<Menu> menu = menuRepository.findById(id);
-            if (menu.isPresent()) {
-                Map<String, String> responseMap = new LinkedHashMap<>();
-                responseMap.put("name", menu.get().getName());
-                return ResponseEntity.ok(responseMap);
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with this ID doesn't exist in database");
-        }
-    }
-
     public Dish toDishFromDTO(DishDTO dishDTO) {
         return modelMapper.map(dishDTO, Dish.class);
     }
@@ -144,7 +131,7 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO>, MenuFacade {
         return modelMapper.map(menuDTO, Menu.class);
     }
 
-    public MenuDTO toMenuDTO(Optional<Menu> menu) {
+    public MenuDTO toMenuDTO(Menu menu) {
         return modelMapper.map(menu, MenuDTO.class);
     }
 

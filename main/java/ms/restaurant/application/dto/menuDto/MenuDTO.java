@@ -16,9 +16,4 @@ import java.util.List;
 public class MenuDTO {
     @NotBlank(message = "Name of menu cannot be blank")
     private String name;
-
-//    @NotNull
-//    @Size(min = 1, message = "There must be at least 1 dish in menu")
-//    @Valid
-//    private List<@NotNull @Valid Dish> dishes;
 }
