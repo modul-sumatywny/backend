@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface OrderFacade {
-    public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId);
+//    public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId);
 }

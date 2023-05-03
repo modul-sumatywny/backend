@@ -32,6 +32,7 @@ public class Dish {
     @JoinColumn(name = "dish_id")
     private List<Product> products = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "dishes")
     private List<Order> orders = new ArrayList<>();
 

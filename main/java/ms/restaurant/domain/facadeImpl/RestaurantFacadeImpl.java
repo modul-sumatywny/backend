@@ -161,6 +161,16 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
         }
     }
 
+    public List<Menu> getAllMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
+        return restaurant.getMenus();
+    }
+
+    public List<RestaurantTable> getAllRestaurantTables(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
+        return restaurant.getRestaurantTables();
+    }
+
     public Restaurant toRestaurantFromDTO(RestaurantDTO restaurantDTO) {
         return modelMapper.map(restaurantDTO, Restaurant.class);
     }

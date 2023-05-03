@@ -18,7 +18,6 @@ import java.util.Optional;
 @Service
 public class ProductFacadeImpl implements CRUDFacade<ProductDTO> {
     private final ProductRepository productRepository;
-    private final DishRepository dishRepository;
     private final ModelMapper modelMapper;
 
     public Product toProductFromDTO(ProductDTO productDTO) {
@@ -65,22 +64,5 @@ public class ProductFacadeImpl implements CRUDFacade<ProductDTO> {
     public IDObject add(ProductDTO productDTO) {
         return null;
     }
-
-//    public ResponseEntity<Map<String, String>> getProduct(Long id) {
-//        if (productRepository.existsById(id)) {
-//            Optional<Product> product = productRepository.findById(id);
-//            if (product.isPresent()) {
-//                Map<String, String> responseMap = new LinkedHashMap<>();
-//                responseMap.put("name", product.get().getName());
-//                responseMap.put("ean", product.get().getEan());
-//                return ResponseEntity.ok(responseMap);
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with this ID doesn't exist in database");
-//            }
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with this ID doesn't exist in database");
-//        }
-//    }
-
 }
 

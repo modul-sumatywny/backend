@@ -7,9 +7,12 @@ import ms.restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
 import ms.restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import ms.restaurant.domain.facadeImpl.RestaurantFacadeImpl;
 import ms.restaurant.domain.model.IDObject;
+import ms.restaurant.domain.model.Menu;
+import ms.restaurant.domain.model.RestaurantTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -56,5 +59,15 @@ public class RestaurantController {
     @DeleteMapping("/delete/table/{restaurantId}")
     public void deleteTableFromRestaurant(@RequestBody TableNumberDTO tableNumberDTO, @PathVariable Long restaurantId) {
         restaurantFacadeImpl.deleteTableFromRestaurant(tableNumberDTO, restaurantId);
+    }
+
+    @GetMapping("/allMenus/{restaurantId}")
+    public List<Menu> getAllMenus(@PathVariable Long restaurantId) {
+        return restaurantFacadeImpl.getAllMenus(restaurantId);
+    }
+
+    @GetMapping("/allTables/{restaurantId}")
+    public List<RestaurantTable> getAllTables(@PathVariable Long restaurantId) {
+        return restaurantFacadeImpl.getAllRestaurantTables(restaurantId);
     }
 }

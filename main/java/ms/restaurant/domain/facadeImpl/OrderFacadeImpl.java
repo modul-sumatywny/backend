@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class OrderFacadeImpl implements CRUDFacade<OrderDTO>, OrderFacade{
+public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
@@ -101,7 +101,6 @@ public class OrderFacadeImpl implements CRUDFacade<OrderDTO>, OrderFacade{
         return new IDObject(newOrder.getId());
     }
 
-    @Override
     public void updateStatus(OrderStatusDTO orderStatusDTO, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with this ID doesn't exist in database"));
         order.setOrderStatus(Order.OrderStatus.valueOf(orderStatusDTO.getOrderStatus()));
