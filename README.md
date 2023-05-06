@@ -3,7 +3,7 @@ Sprawdz wersje javy
 java -version 
 --Jezeli jest java 17 mozna zainstalowac gradle
 
---Jezeli nie instalujemy java 17 z https://adoptium.net/download/
+--Jezeli nie instalujemy java 17 z https://adoptium.net
 
 
 Instalacja Gradle: 
