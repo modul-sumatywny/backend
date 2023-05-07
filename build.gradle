@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'       // for 'shutdown' command
 	implementation 'org.modelmapper:modelmapper:3.1.0'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
