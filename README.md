@@ -16,3 +16,6 @@ Nastepnie wchodzimy do zmiennych srodowiskowych oraz dodajemy w Path C:\Gradle\g
 
 Właczamy konsole nastepni przechodizmy do folderu backend
 wykonujemy komende: gradle bootRun
+
+Endpointy znajduja sie pod adresem:
+http://localhost:8083/swagger-ui/index.html
