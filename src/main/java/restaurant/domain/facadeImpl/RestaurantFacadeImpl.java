@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import restaurant.application.dto.menuDto.MenuDTO;
 import restaurant.application.dto.restaurantDto.RestaurantDTO;
+import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
 import restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
 import restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import restaurant.domain.facade.CRUDFacade;
@@ -170,6 +171,21 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
         return restaurant.getRestaurantTables();
     }
+
+    public List<RestaurantWithIdDTO> getAllRestaurants() {
+        List<RestaurantWithIdDTO> restaurants = new ArrayList<>();
+        for (Restaurant restaurant : restaurantRepository.findAll()) {
+            RestaurantWithIdDTO restaurantWithIdDTO = new RestaurantWithIdDTO();
+            restaurantWithIdDTO.setId(restaurant.getId());
+            restaurantWithIdDTO.setName(restaurant.getName());
+            restaurantWithIdDTO.setPhoneNumber(restaurant.getPhoneNumber());
+            restaurantWithIdDTO.setAddress(restaurant.getAddress());
+
+            restaurants.add(restaurantWithIdDTO);
+        }
+        return restaurants;
+    }
+
 
     public Restaurant toRestaurantFromDTO(RestaurantDTO restaurantDTO) {
         return modelMapper.map(restaurantDTO, Restaurant.class);

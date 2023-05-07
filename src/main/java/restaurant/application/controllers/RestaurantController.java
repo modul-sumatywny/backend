@@ -3,6 +3,7 @@ package restaurant.application.controllers;
 import jakarta.validation.Valid;
 import restaurant.application.dto.menuDto.MenuDTO;
 import restaurant.application.dto.restaurantDto.RestaurantDTO;
+import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
 import restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
 import restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import restaurant.domain.facadeImpl.RestaurantFacadeImpl;
@@ -69,5 +70,10 @@ public class RestaurantController {
     @GetMapping("/allTables/{restaurantId}")
     public List<RestaurantTable> getAllTables(@PathVariable Long restaurantId) {
         return restaurantFacadeImpl.getAllRestaurantTables(restaurantId);
+    }
+
+    @GetMapping("/allRestaurants")
+    public List<RestaurantWithIdDTO> getAllRestaurants() {
+        return restaurantFacadeImpl.getAllRestaurants();
     }
 }
