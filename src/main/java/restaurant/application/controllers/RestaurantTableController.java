@@ -1,11 +1,14 @@
 package restaurant.application.controllers;
 
 import jakarta.validation.Valid;
+import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
 import restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.RestaurantTableFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -31,5 +34,8 @@ public class RestaurantTableController {
         restaurantTableFacadeImpl.update(restaurantTableDTO, restaurantTableId);
     }
 
-
+    @GetMapping("/allRestaurantTables")
+    public List<RestaurantTableWithIdDTO> getAllRestaurantTables() {
+        return restaurantTableFacadeImpl.getAll();
+    }
 }

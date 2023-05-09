@@ -1,9 +1,12 @@
 package restaurant.domain.facadeImpl;
 
 import lombok.RequiredArgsConstructor;
+import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
 import restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
 import restaurant.domain.model.IDObject;
+import restaurant.domain.model.Restaurant;
 import restaurant.domain.model.RestaurantTable;
 import restaurant.infrastructure.repository.RestaurantTableRepository;
 import org.modelmapper.ModelMapper;
@@ -11,11 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class RestaurantTableFacadeImpl implements CRUDFacade<RestaurantTableDTO> {
+public class RestaurantTableFacadeImpl implements CRUDFacade<RestaurantTableDTO, RestaurantTableWithIdDTO> {
     private final RestaurantTableRepository restaurantTableRepository;
     private final ModelMapper modelMapper;
 
@@ -59,5 +64,18 @@ public class RestaurantTableFacadeImpl implements CRUDFacade<RestaurantTableDTO>
 
     public RestaurantTableDTO toTableDTO(restaurant.domain.model.RestaurantTable restaurantTable) {
         return modelMapper.map(restaurantTable, RestaurantTableDTO.class);
+    }
+
+    @Override
+    public List<RestaurantTableWithIdDTO> getAll() {
+        List<RestaurantTableWithIdDTO> restaurantTables = new ArrayList<>();
+        for (RestaurantTable restaurantTable : restaurantTableRepository.findAll()) {
+            RestaurantTableWithIdDTO restaurantTableWithIdDTO = new RestaurantTableWithIdDTO();
+            restaurantTableWithIdDTO.setId(restaurantTable.getId());
+            restaurantTableWithIdDTO.setTableNumber(restaurantTable.getTableNumber());
+            restaurantTableWithIdDTO.setNumberOfSeats(restaurantTable.getNumberOfSeats());
+            restaurantTables.add(restaurantTableWithIdDTO);
+        }
+        return restaurantTables;
     }
 }

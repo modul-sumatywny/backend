@@ -24,7 +24,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
+public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO, RestaurantWithIdDTO> {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
     private final RestaurantTableRepository restaurantTableRepository;
@@ -172,7 +172,8 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO> {
         return restaurant.getRestaurantTables();
     }
 
-    public List<RestaurantWithIdDTO> getAllRestaurants() {
+    @Override
+    public List<RestaurantWithIdDTO> getAll() {
         List<RestaurantWithIdDTO> restaurants = new ArrayList<>();
         for (Restaurant restaurant : restaurantRepository.findAll()) {
             RestaurantWithIdDTO restaurantWithIdDTO = new RestaurantWithIdDTO();

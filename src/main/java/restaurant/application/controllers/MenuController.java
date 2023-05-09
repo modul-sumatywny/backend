@@ -5,10 +5,13 @@ import jakarta.validation.Valid;
 import restaurant.application.dto.dishDto.DishDTO;
 import restaurant.application.dto.dishDto.DishNameDTO;
 import restaurant.application.dto.menuDto.MenuDTO;
+import restaurant.application.dto.menuDto.MenuWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.MenuFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -50,4 +53,10 @@ public class MenuController {
     public void deleteDishFromMenu(@RequestBody DishNameDTO dishNameDTO, @PathVariable Long menuId) {
         menuFacadeImpl.deleteDishFromMenu(dishNameDTO, menuId);
     }
+
+    @GetMapping("/allMenus")
+    public List<MenuWithIdDTO> getAllMenus() {
+        return menuFacadeImpl.getAll();
+    }
+
 }

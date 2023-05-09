@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import restaurant.application.dto.orderDto.OrderDTO;
 import restaurant.application.dto.orderDto.OrderStatusDTO;
+import restaurant.application.dto.orderDto.OrderWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
 import restaurant.domain.facade.OrderFacade;
 import restaurant.domain.model.*;
@@ -22,7 +24,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
+public class OrderFacadeImpl implements CRUDFacade<OrderDTO, OrderWithIdDTO> {
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
@@ -106,6 +108,26 @@ public class OrderFacadeImpl implements CRUDFacade<OrderDTO> {
         order.setOrderStatus(Order.OrderStatus.valueOf(orderStatusDTO.getOrderStatus()));
         order.setId(orderId);
         orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderWithIdDTO> getAll() {
+        List<OrderWithIdDTO> orders = new ArrayList<>();
+        List<Long> dishesIds = new ArrayList<>();
+
+
+        for (Order order : orderRepository.findAll()) {
+            OrderWithIdDTO orderWithIdDTO = new OrderWithIdDTO();
+            orderWithIdDTO.setId(order.getId());
+
+            for (Dish dish : order.getDishes()) { // ten blok dodaje id dań z konkretnego zamówienia do listy
+                orderWithIdDTO.getDishesIDs().add(dish.getId());
+            }
+
+            orderWithIdDTO.setRestaurantId(order.getRestaurant().getId());
+            orders.add(orderWithIdDTO);
+        }
+        return orders;
     }
 
     public OrderDTO toOrderDTO(Order order) {

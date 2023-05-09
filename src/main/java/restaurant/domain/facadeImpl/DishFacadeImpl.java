@@ -3,12 +3,15 @@ package restaurant.domain.facadeImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import restaurant.application.dto.dishDto.DishDTO;
+import restaurant.application.dto.dishDto.DishWithIdDTO;
 import restaurant.application.dto.productDto.ProductDTO;
 import restaurant.application.dto.productDto.ProductEanDto;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
 import restaurant.domain.model.Dish;
 import restaurant.domain.model.IDObject;
 import restaurant.domain.model.Product;
+import restaurant.domain.model.RestaurantTable;
 import restaurant.infrastructure.repository.DishRepository;
 import restaurant.infrastructure.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
@@ -20,7 +23,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class DishFacadeImpl implements CRUDFacade<DishDTO> {
+public class DishFacadeImpl implements CRUDFacade<DishDTO, DishWithIdDTO> {
     private final DishRepository dishRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
@@ -115,6 +118,20 @@ public class DishFacadeImpl implements CRUDFacade<DishDTO> {
         if (!flag) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with given ID doesnt have product with given EAN" );
         }
+    }
+
+    @Override
+    public List<DishWithIdDTO> getAll() {
+        List<DishWithIdDTO> dishes = new ArrayList<>();
+        for (Dish dish : dishRepository.findAll()) {
+            DishWithIdDTO dishWithIdDTO = new DishWithIdDTO();
+            dishWithIdDTO.setId(dish.getId());
+            dishWithIdDTO.setName(dish.getName());
+            dishWithIdDTO.setCategory(dish.getCategory());
+            dishWithIdDTO.setPrice(dish.getPrice());
+            dishes.add(dishWithIdDTO);
+        }
+        return dishes;
     }
 
     @Override

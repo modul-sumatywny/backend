@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import restaurant.application.dto.dishDto.DishDTO;
 import restaurant.application.dto.dishDto.DishNameDTO;
 import restaurant.application.dto.menuDto.MenuDTO;
+import restaurant.application.dto.menuDto.MenuWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
 import restaurant.domain.model.Dish;
 import restaurant.domain.model.IDObject;
 import restaurant.domain.model.Menu;
+import restaurant.domain.model.RestaurantTable;
 import restaurant.infrastructure.repository.DishRepository;
 import restaurant.infrastructure.repository.MenuRepository;
 import org.modelmapper.ModelMapper;
@@ -20,7 +23,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class MenuFacadeImpl implements CRUDFacade<MenuDTO> {
+public class MenuFacadeImpl implements CRUDFacade<MenuDTO, MenuWithIdDTO> {
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
     private final ModelMapper modelMapper;
@@ -114,6 +117,18 @@ public class MenuFacadeImpl implements CRUDFacade<MenuDTO> {
         if (!flag) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu with given ID doesnt have dish with given name" );
         }
+    }
+
+    @Override
+    public List<MenuWithIdDTO> getAll() {
+        List<MenuWithIdDTO> menus = new ArrayList<>();
+        for (Menu menu : menuRepository.findAll()) {
+            MenuWithIdDTO menuWithIdDTO = new MenuWithIdDTO();
+            menuWithIdDTO.setId(menu.getId());
+            menuWithIdDTO.setName(menu.getName());
+            menus.add(menuWithIdDTO);
+        }
+        return menus;
     }
 
     public Dish toDishFromDTO(DishDTO dishDTO) {

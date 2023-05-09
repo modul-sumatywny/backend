@@ -2,6 +2,8 @@ package restaurant.domain.facadeImpl;
 
 import lombok.RequiredArgsConstructor;
 import restaurant.application.dto.reservationDto.ReservationDTO;
+import restaurant.application.dto.reservationDto.ReservationWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
 import restaurant.domain.model.*;
 import restaurant.infrastructure.repository.ReservationRepository;
@@ -18,7 +20,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ReservationFacadeImpl implements CRUDFacade<ReservationDTO> {
+public class ReservationFacadeImpl implements CRUDFacade<ReservationDTO, ReservationWithIdDTO> {
     private final ReservationRepository reservationRepository;
     private final RestaurantTableRepository restaurantTableRepository;
     private final ModelMapper modelMapper;
@@ -63,6 +65,20 @@ public class ReservationFacadeImpl implements CRUDFacade<ReservationDTO> {
         reservationRepository.save(newReservation);
 
         return new IDObject(newReservation.getId());
+    }
+
+    @Override
+    public List<ReservationWithIdDTO> getAll() {
+        List<ReservationWithIdDTO> reservations = new ArrayList<>();
+        for (Reservation reservation : reservationRepository.findAll()) {
+            ReservationWithIdDTO reservationWithIdDTO = new ReservationWithIdDTO();
+            reservationWithIdDTO.setId(reservation.getId());
+            reservationWithIdDTO.setReservationDateTime(reservation.getReservationDateTime());
+            reservationWithIdDTO.setName(reservation.getName());
+            reservationWithIdDTO.setRestaurantTableId(reservation.getRestaurantTable().getId());
+            reservations.add(reservationWithIdDTO);
+        }
+        return reservations;
     }
 
     public ReservationDTO toReservationDTO(Reservation reservation) {

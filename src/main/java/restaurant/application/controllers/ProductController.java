@@ -1,5 +1,7 @@
 package restaurant.application.controllers;
 
+import restaurant.application.dto.productDto.ProductWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.ProductFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +9,7 @@ import restaurant.application.dto.productDto.ProductDTO;
 
 import jakarta.validation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +37,11 @@ public class ProductController {
     @PutMapping("/update/{productId}")
     public void updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long productId) {
         productFacadeImpl.update(productDTO, productId);
+    }
+
+    @GetMapping("/allProducts")
+    public List<ProductWithIdDTO> getAllProducts() {
+        return productFacadeImpl.getAll();
     }
 }
 

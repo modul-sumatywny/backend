@@ -3,11 +3,14 @@ package restaurant.application.controllers;
 import jakarta.validation.Valid;
 import restaurant.application.dto.orderDto.OrderDTO;
 import restaurant.application.dto.orderDto.OrderStatusDTO;
+import restaurant.application.dto.orderDto.OrderWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.OrderFacadeImpl;
 import restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -43,5 +46,10 @@ public class OrderController {
     @PutMapping("/update/status/{orderId}")
     public void updateStatus(@Valid @RequestBody OrderStatusDTO orderStatusDTO, @PathVariable Long orderId) {
         orderFacadeImpl.updateStatus(orderStatusDTO, orderId);
+    }
+
+    @GetMapping("/allOrders")
+    public List<OrderWithIdDTO> getAllOrders() {
+        return orderFacadeImpl.getAll();
     }
 }

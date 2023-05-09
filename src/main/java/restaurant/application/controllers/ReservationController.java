@@ -2,11 +2,14 @@ package restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import restaurant.application.dto.reservationDto.ReservationDTO;
+import restaurant.application.dto.reservationDto.ReservationWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.ReservationFacadeImpl;
 import restaurant.domain.model.IDObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,6 +35,11 @@ public class ReservationController {
     @PostMapping("/add")
     public IDObject addReservation(@Valid @RequestBody ReservationDTO reservationDTO) {
         return reservationFacadeImpl.add(reservationDTO);
+    }
+
+    @GetMapping("/allReservations")
+    public List<ReservationWithIdDTO> getAllReservations() {
+        return reservationFacadeImpl.getAll();
     }
 
 }

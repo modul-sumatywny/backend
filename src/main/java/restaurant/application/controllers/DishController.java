@@ -3,12 +3,15 @@ package restaurant.application.controllers;
 
 import jakarta.validation.Valid;
 import restaurant.application.dto.dishDto.DishDTO;
+import restaurant.application.dto.dishDto.DishWithIdDTO;
 import restaurant.application.dto.productDto.ProductDTO;
 import restaurant.application.dto.productDto.ProductEanDto;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facadeImpl.DishFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,5 +49,10 @@ public class DishController {
     @DeleteMapping("/delete/product/{dishId}")
     public void deleteProductFromDish(@Valid @RequestBody ProductEanDto productEanDTO, @PathVariable Long dishId) {
         dishFacadeImpl.deleteProductFromDish(productEanDTO, dishId);
+    }
+
+    @GetMapping("/allDishes")
+    public List<DishWithIdDTO> getAllDishes() {
+        return dishFacadeImpl.getAll();
     }
 }

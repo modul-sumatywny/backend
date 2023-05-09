@@ -74,6 +74,6 @@ public class RestaurantController {
 
     @GetMapping("/allRestaurants")
     public List<RestaurantWithIdDTO> getAllRestaurants() {
-        return restaurantFacadeImpl.getAllRestaurants();
+        return restaurantFacadeImpl.getAll();
     }
 }

@@ -1,7 +1,10 @@
 package restaurant.domain.facadeImpl;
 
 import lombok.RequiredArgsConstructor;
+import restaurant.application.dto.productDto.ProductWithIdDTO;
+import restaurant.application.dto.restaurantTableDto.RestaurantTableWithIdDTO;
 import restaurant.domain.facade.CRUDFacade;
+import restaurant.domain.model.RestaurantTable;
 import restaurant.infrastructure.repository.DishRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -12,11 +15,13 @@ import restaurant.domain.model.IDObject;
 import restaurant.domain.model.Product;
 import restaurant.infrastructure.repository.ProductRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ProductFacadeImpl implements CRUDFacade<ProductDTO> {
+public class ProductFacadeImpl implements CRUDFacade<ProductDTO, ProductWithIdDTO> {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
@@ -63,6 +68,19 @@ public class ProductFacadeImpl implements CRUDFacade<ProductDTO> {
     @Override
     public IDObject add(ProductDTO productDTO) {
         return null;
+    }
+
+    @Override
+    public List<ProductWithIdDTO> getAll() {
+        List<ProductWithIdDTO> products = new ArrayList<>();
+        for (Product product : productRepository.findAll()) {
+            ProductWithIdDTO productWithIdDTO = new ProductWithIdDTO();
+            productWithIdDTO.setId(product.getId());
+            productWithIdDTO.setName(product.getName());
+            productWithIdDTO.setEan(product.getEan());
+            products.add(productWithIdDTO);
+        }
+        return products;
     }
 }
 
