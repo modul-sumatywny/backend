@@ -30,6 +30,9 @@ public class Restaurant {
     @Column
     private String address;
 
+    @Column
+    private String photo;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")
     private List<Menu> menus = new ArrayList<>();

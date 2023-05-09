@@ -181,7 +181,7 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO, Restauran
             restaurantWithIdDTO.setName(restaurant.getName());
             restaurantWithIdDTO.setPhoneNumber(restaurant.getPhoneNumber());
             restaurantWithIdDTO.setAddress(restaurant.getAddress());
-
+            restaurantWithIdDTO.setPhoto(restaurant.getPhoto());
             restaurants.add(restaurantWithIdDTO);
         }
         return restaurants;

@@ -19,4 +19,7 @@ public class RestaurantDTO {
 
     @NotBlank(message = "Address of restaurant cannot be blank")
     private String address;
+
+    @NotBlank(message = "Photo of restaurant cannot be blank")
+    private String photo;
 }
