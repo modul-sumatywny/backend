@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/dishes")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class DishController {
     private final DishFacadeImpl dishFacadeImpl;
 

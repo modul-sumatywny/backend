@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/table")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RestaurantTableController {
     private final RestaurantTableFacadeImpl restaurantTableFacadeImpl;
 

@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservation")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReservationController {
     private final ReservationFacadeImpl reservationFacadeImpl;
 

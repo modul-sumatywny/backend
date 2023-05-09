@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurant")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RestaurantController {
     private final RestaurantFacadeImpl restaurantFacadeImpl;
 

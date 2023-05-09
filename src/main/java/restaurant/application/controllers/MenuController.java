@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/menu")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MenuController {
     private final MenuFacadeImpl menuFacadeImpl;
 
@@ -29,7 +30,7 @@ public class MenuController {
         return menuFacadeImpl.get(menuId);
     }
 
-//    @PostMapping("/addDish")
+    //    @PostMapping("/addDish")
 //    public DishDTO addDishToMenu(@PathVariable Long id, @Valid @RequestBody DishDTO dishDTO) {
 //        return menuFacadeImpl.addDishToMenu(id, dishDTO);
 //    }
@@ -46,7 +47,7 @@ public class MenuController {
 
     @PostMapping("/add/dish/{menuId}")
     public void addDishToMenu(@Valid @RequestBody DishDTO dishDTO, @PathVariable Long menuId) {
-       menuFacadeImpl.addDishToMenu(dishDTO, menuId);
+        menuFacadeImpl.addDishToMenu(dishDTO, menuId);
     }
 
     @DeleteMapping("/delete/dish/{menuId}")

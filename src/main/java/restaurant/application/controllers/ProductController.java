@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+@CrossOrigin(origins = "*", allowedHeaders = "*")public class ProductController {
     private final ProductFacadeImpl productFacadeImpl;
 
     @Autowired

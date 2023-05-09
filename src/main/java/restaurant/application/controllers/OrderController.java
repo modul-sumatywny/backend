@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class OrderController {
     private final OrderFacadeImpl orderFacadeImpl;
 
