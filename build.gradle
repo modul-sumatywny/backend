@@ -25,7 +25,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.h2database:h2'      //for H2 database
+	implementation 'org.postgresql:postgresql:42.3.1'
+	//for H2 database
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'       // for 'shutdown' command
