@@ -40,4 +40,8 @@ public class Restaurant {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")
     private List<RestaurantTable> restaurantTables = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "restaurant_id")
+    private List<JobOffer> jobOffers = new ArrayList<>();
 }
