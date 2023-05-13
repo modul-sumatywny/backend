@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -34,6 +37,10 @@ public class JobOffer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "job_offer_id")
+    private List<Form> forms = new ArrayList<>();
     public enum OfferStatus {
         ACTIVE,
         INACTIVE

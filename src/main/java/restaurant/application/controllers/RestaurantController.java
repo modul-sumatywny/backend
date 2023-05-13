@@ -1,6 +1,7 @@
 package restaurant.application.controllers;
 
 import jakarta.validation.Valid;
+import restaurant.application.dto.formDto.FormWithIdDTO;
 import restaurant.application.dto.menuDto.MenuDTO;
 import restaurant.application.dto.restaurantDto.RestaurantDTO;
 import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
@@ -71,6 +72,11 @@ public class RestaurantController {
     @GetMapping("/allTables/{restaurantId}")
     public List<RestaurantTable> getAllTables(@PathVariable Long restaurantId) {
         return restaurantFacadeImpl.getAllRestaurantTables(restaurantId);
+    }
+
+    @GetMapping("/allForms/{restaurantId}")
+    public List<FormWithIdDTO> getAllForms(@PathVariable Long restaurantId) {
+        return restaurantFacadeImpl.getAllForms(restaurantId);
     }
 
     @GetMapping("/allRestaurants")

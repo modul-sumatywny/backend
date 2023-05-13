@@ -2,16 +2,15 @@ package restaurant.domain.facadeImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import restaurant.application.dto.formDto.FormWithIdDTO;
 import restaurant.application.dto.menuDto.MenuDTO;
 import restaurant.application.dto.restaurantDto.RestaurantDTO;
 import restaurant.application.dto.restaurantDto.RestaurantWithIdDTO;
 import restaurant.application.dto.restaurantTableDto.RestaurantTableDTO;
 import restaurant.application.dto.restaurantTableDto.TableNumberDTO;
 import restaurant.domain.facade.CRUDFacade;
-import restaurant.domain.model.IDObject;
-import restaurant.domain.model.Menu;
-import restaurant.domain.model.Restaurant;
-import restaurant.domain.model.RestaurantTable;
+import restaurant.domain.model.*;
+import restaurant.infrastructure.repository.FormRepository;
 import restaurant.infrastructure.repository.MenuRepository;
 import restaurant.infrastructure.repository.RestaurantRepository;
 import restaurant.infrastructure.repository.RestaurantTableRepository;
@@ -29,6 +28,7 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO, Restauran
     private final MenuRepository menuRepository;
     private final RestaurantTableRepository restaurantTableRepository;
     private final ModelMapper modelMapper;
+    private final FormRepository formRepository;
 
 //    @Override
 //    public Optional<RestaurantDTO> get(Long id) {
@@ -170,6 +170,17 @@ public class RestaurantFacadeImpl implements CRUDFacade<RestaurantDTO, Restauran
     public List<RestaurantTable> getAllRestaurantTables(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
         return restaurant.getRestaurantTables();
+    }
+
+    public List<FormWithIdDTO> getAllForms(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant with this ID doesnt exists in database!"));
+        List<FormWithIdDTO> forms = new ArrayList<>();
+        for (Form form : formRepository.findAll()) {
+            if(form.getJobOffer().getRestaurant().getId().equals(restaurant.getId())){
+                forms.add(modelMapper.map(form, FormWithIdDTO.class));
+            }
+        }
+        return forms;
     }
 
     @Override
