@@ -1,0 +1,18 @@
+
+spring:
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+
+jwt:
+    private:
+        key: classpath:rsa.private.key
+    public:
+        key: classpath:rsa.public.key
+    expiration:
+        seconds: 28800
+
+swagger:
+    path: /swagger-ui
+
+
