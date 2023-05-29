@@ -24,11 +24,6 @@ public interface DishMapper extends MapperBase<Dish, DishDto, DishPostDto> {
                                 .id(id)
                                 .build())
                         .toList())
-                .menus(postDto.getMenusIds().stream()
-                        .map(id -> Menu.builder()
-                                .id(id)
-                                .build())
-                        .toList())
                 .build();
     }
 }

@@ -27,6 +27,4 @@ public class DishPostDto {
     @NotNull
     private List<Long> productsIds = new ArrayList<>();
 
-    @NotNull
-    private List<Long> menusIds = new ArrayList<>();
 }

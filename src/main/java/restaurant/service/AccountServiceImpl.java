@@ -2,11 +2,13 @@ package restaurant.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -31,6 +33,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
+    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${jwt.expiration.seconds}")
     private long expirationTime;
 
@@ -72,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
                         registrationForm.getLastName(),
                         registrationForm.getEmail(),
                         registrationForm.getPhoneNumber(),
-                        registrationForm.getHashedPass())
+                        bCryptPasswordEncoder.encode(registrationForm.getPassword()))
         ).getId();
     }
 

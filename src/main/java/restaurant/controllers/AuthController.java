@@ -17,6 +17,9 @@ import restaurant.service.interfaces.AccountService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static org.springframework.http.ResponseEntity.ok;
+
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -60,9 +63,8 @@ public class AuthController {
     public ResponseEntity<Object> register(@RequestBody RegistrationDto request) {
         try {
             Long id = accountService.register(request);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .header(HttpHeaders.LOCATION, id.toString())
-                    .build();
+            request.setPassword("*****");
+            return ok(request);
         } catch (IllegalStateException ex) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                     .body(ex.getMessage());

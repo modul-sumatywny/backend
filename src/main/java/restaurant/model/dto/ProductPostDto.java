@@ -20,6 +20,4 @@ public class ProductPostDto {
     @NotBlank(message = "EAN number of product cannot be blank")
     private String ean;
 
-    @NotNull
-    private List<Long> dishesIds = new ArrayList<>();
 }

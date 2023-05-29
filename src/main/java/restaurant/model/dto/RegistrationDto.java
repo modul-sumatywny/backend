@@ -20,7 +20,7 @@ public class RegistrationDto {
 
     private String phoneNumber;
 
-    private String hashedPass;
+    private String password;
 
     public boolean validateUsername(String username) {
         return username.length() >= 3 && username.length() <= 40 && !username.contains(" ");
