@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Gradle
-        run: gradle clean build
+        run: gradle clean bootWar
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
