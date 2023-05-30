@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RestaurantPostDto {
+
     @NotBlank(message = "Name of restaurant cannot be blank")
     private String name;
 
@@ -28,7 +29,6 @@ public class RestaurantPostDto {
     @NotBlank(message = "Photo of restaurant cannot be blank")
     private String photo;
 
-    @NotNull(message = "Tables Ids cannot be null!")
-    private List<Long> tablesIds = new ArrayList<>();
-
+    @NotNull(message = "Menu ID must not be null")
+    private Long menuId;
 }

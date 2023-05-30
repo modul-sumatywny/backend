@@ -50,7 +50,7 @@ public class MenuController extends CrudController<Long, Menu, MenuDto, MenuPost
             Menu entity = mapper.postDtoToEntity(menuPostDto);
 
             List<Dish> dishList;
-            if (menuPostDto.getDishesIds().size() != 0) {
+            if (menuPostDto.getDishesIds().size() > 0) {
                 dishList = dishService.getByIds(menuPostDto.getDishesIds());
             } else {
                 dishList = menuService.getById(id).getDishes();

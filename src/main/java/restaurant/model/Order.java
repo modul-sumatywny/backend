@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Data
 @NoArgsConstructor
@@ -38,7 +39,7 @@ public class Order implements ModelEntity<Long> {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
     @JoinTable(
         name = "order_dish",
         joinColumns = @JoinColumn(name = "order_id"),

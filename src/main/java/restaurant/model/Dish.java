@@ -1,6 +1,5 @@
 package restaurant.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.Table;
+
+import static jakarta.persistence.CascadeType.*;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +20,7 @@ import jakarta.persistence.Table;
 public class Dish implements ModelEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "dish_id", nullable = false)
     private Long id;
 
@@ -34,7 +36,7 @@ public class Dish implements ModelEntity<Long> {
     @ManyToMany(mappedBy = "dishes")
     private List<Menu> menus;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
     @JoinTable(
             name = "dish_product",
             joinColumns = @JoinColumn(name = "product_id"),

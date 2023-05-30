@@ -1,10 +1,7 @@
 package restaurant.model.mapper;
 
 import org.mapstruct.Mapper;
-import restaurant.model.Dish;
-import restaurant.model.Order;
-import restaurant.model.Restaurant;
-import restaurant.model.Table;
+import restaurant.model.*;
 import restaurant.model.dto.DishPostDto;
 import restaurant.model.dto.RestaurantDto;
 import restaurant.model.dto.RestaurantPostDto;
@@ -21,11 +18,10 @@ public interface RestaurantMapper extends MapperBase<Restaurant, RestaurantDto, 
                 .phoneNumber(postDto.getPhoneNumber())
                 .address(postDto.getAddress())
                 .photo(postDto.getPhoto())
-                .tables(postDto.getTablesIds().stream()
-                        .map(id -> Table.builder()
-                                .id(id)
-                                .build())
-                        .toList())
+                .menu(Menu.builder()
+                        .id(postDto.getMenuId())
+                        .build())
                 .build();
     }
+
 }

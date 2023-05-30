@@ -28,5 +28,6 @@ public class RestaurantDto {
     @NotBlank(message = "Photo of restaurant cannot be blank")
     private String photo;
 
+    private long menu_id;
 
 }

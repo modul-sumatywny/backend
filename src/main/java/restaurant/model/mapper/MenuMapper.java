@@ -3,7 +3,6 @@ package restaurant.model.mapper;
 import org.mapstruct.Mapper;
 import restaurant.model.Dish;
 import restaurant.model.Menu;
-import restaurant.model.Restaurant;
 import restaurant.model.dto.MenuDto;
 import restaurant.model.dto.MenuPostDto;
 

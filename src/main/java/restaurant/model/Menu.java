@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +26,11 @@ public class Menu implements ModelEntity<Long> {
     @Column
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
     @JoinColumn(name = "menu_id")
     private List<Restaurant> restaurants;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
     @JoinTable(
             name = "menu_dish",
             joinColumns = @JoinColumn(name = "dish_id"),

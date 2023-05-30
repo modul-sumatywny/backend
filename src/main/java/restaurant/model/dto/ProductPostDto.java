@@ -14,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPostDto {
+
     @NotBlank(message = "Name of product cannot be blank")
     private String name;
 
     @NotBlank(message = "EAN number of product cannot be blank")
     private String ean;
-
 }

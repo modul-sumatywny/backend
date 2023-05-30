@@ -21,6 +21,6 @@ public class ReservationPostDto {
     @Future(message = "Reservation time must be in future time")
     private LocalDateTime reservationDateTime;
 
-    @NotNull(message = "Restaurant table ID must not be null")
+    @NotNull(message = "Table ID must not be null")
     private Long tableId;
 }

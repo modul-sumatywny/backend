@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Product;
-import restaurant.model.dto.DishDto;
-import restaurant.model.dto.DishPostDto;
+import restaurant.model.dto.*;
 import restaurant.model.mapper.DishMapper;
+import restaurant.model.mapper.MenuMapper;
+import restaurant.model.mapper.OrderMapper;
 import restaurant.model.mapper.ProductMapper;
 import restaurant.service.DishService;
 import restaurant.service.ProductService;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -26,13 +26,14 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
 
     private final DishService dishService;
     private final ProductService productService;
-    private final ProductMapper productMapper;
+    private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
+    private final OrderMapper orderMapper = Mappers.getMapper(OrderMapper.class);
+    private final MenuMapper menuMapper = Mappers.getMapper(MenuMapper.class);
 
     public DishController(DishService dishService, ProductService productService) {
         super(Mappers.getMapper(DishMapper.class), dishService);
         this.dishService = dishService;
         this.productService = productService;
-        productMapper = Mappers.getMapper(ProductMapper.class);
     }
 
     @Override
@@ -62,8 +63,8 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @Transactional
-    @PostMapping("{dishId}/product/{productId}")
-    public ResponseEntity<Object> addProductToDish(@PathVariable long dishId, @PathVariable long productId) {
+    @PostMapping("{dishId}/addProduct/{productId}")
+    public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId) {
         try {
             Dish dish = dishService.getById(dishId);
             Product product = productService.getById(productId);
@@ -76,12 +77,43 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
         }
     }
 
-    @Transactional
-    @GetMapping("{dishId}/products")
-    public ResponseEntity<?> getDishProducts(@PathVariable long dishId) {
+    @GetMapping("{dishId}/getMenus")
+    public ResponseEntity<?> getMenus(@PathVariable Long dishId) {
         try {
             Dish dish = dishService.getById(dishId);
-            return ok(dish.getProducts().stream().map(productMapper::entityToDto).collect(Collectors.toList()));
+            List<MenuDto> menus = dish.getMenus().stream()
+                    .map(menuMapper::entityToDto)
+                    .toList();
+
+            return ok(menus);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("{dishId}/getProducts")
+    public ResponseEntity<?> getProducts(@PathVariable Long dishId) {
+        try {
+            Dish dish = dishService.getById(dishId);
+            List<ProductDto> products = dish.getProducts().stream()
+                    .map(productMapper::entityToDto)
+                    .toList();
+
+            return ok(products);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("{dishId}/getOrders")
+    public ResponseEntity<?> getOrders(@PathVariable Long dishId) {
+        try {
+            Dish dish = dishService.getById(dishId);
+            List<OrderDto> orders = dish.getOrders().stream()
+                    .map(orderMapper::entityToDto)
+                    .toList();
+
+            return ok(orders);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }

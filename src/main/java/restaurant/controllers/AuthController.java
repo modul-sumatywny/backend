@@ -38,7 +38,7 @@ public class AuthController {
 
             response.addCookie(cookie);
 
-            return ResponseEntity.ok()
+            return ok()
                     .header(HttpHeaders.AUTHORIZATION, token)
                     .body(user);
         } catch (BadCredentialsException ex) {
