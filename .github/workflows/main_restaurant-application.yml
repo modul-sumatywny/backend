@@ -50,4 +50,4 @@ jobs:
           app-name: 'Restaurant-Application'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DAF69A11166D44F4835F8D78845A4302 }}
-          package: '**/*.war'
+          package: '*.war'
