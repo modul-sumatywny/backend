@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class ReservationService extends CrudService<Long, Reservation> {
             Map<LocalTime, Table> availableTimes = getAvailableTimes(restaurantId, numberOfGuests, reservationTime);
             List<LocalTime> availableHours = new ArrayList<>(availableTimes.keySet());
             List<String> sortedTimes = availableHours.stream()
-                    .map(LocalTime::toString)
+                    .map(time -> reservationTime.with(time).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")))
                     .sorted()
                     .collect(Collectors.toList());
             return sortedTimes;

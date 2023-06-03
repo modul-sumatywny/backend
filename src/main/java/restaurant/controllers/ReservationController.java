@@ -1,6 +1,7 @@
 package restaurant.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Future;
 import org.mapstruct.factory.Mappers;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,10 @@ public class ReservationController extends CrudController<Long, Reservation, Res
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime reservationTime
     ) {
         try {
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (reservationTime.isBefore(currentTime)) {
+                throw new IllegalArgumentException("Reservation time must be in the future");
+            }
             return ok(reservationService.getTimes(restaurantId,numberOfGuests,reservationTime));
         }catch (Exception e) {
             throw new RuntimeException(e.getCause());
@@ -58,6 +63,10 @@ public class ReservationController extends CrudController<Long, Reservation, Res
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime reservationTime
     ) {
         try {
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (reservationTime.isBefore(currentTime)) {
+                throw new IllegalArgumentException("Reservation time must be in the future");
+            }
             return ok(reservationService.reserveTable(restaurantId,accountId,numberOfGuests,reservationTime));
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
