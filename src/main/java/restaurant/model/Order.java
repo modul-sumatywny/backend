@@ -36,10 +36,17 @@ public class Order implements ModelEntity<Long> {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
+    @Column
+    private Integer orderTotalCost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference
     private Restaurant restaurant;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
     @JoinTable(

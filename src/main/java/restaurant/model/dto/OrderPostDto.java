@@ -19,11 +19,11 @@ public class OrderPostDto {
 
     private LocalDateTime orderTime;
 
-    @NotNull
-    private OrderStatus orderStatus;
-
     @NotNull(message = "Restaurant ID must not be null")
     private Long restaurantId;
+
+    @NotNull(message = "Account ID must not be null")
+    private Long accountId;
 
     @Size(min = 1, message = "Order must contain at least 1 dish")
     private List<Long> dishesIDs = new ArrayList<>();

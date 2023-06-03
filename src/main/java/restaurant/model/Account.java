@@ -61,6 +61,11 @@ public class Account implements ModelEntity<Long> {
     @JsonManagedReference
     private List<Reservation> reservations;
 
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "account")
+    @JsonManagedReference
+    private List<Order> orders;
+
+
     public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
 //        this.id = UUID.randomUUID();
         this.username = username;

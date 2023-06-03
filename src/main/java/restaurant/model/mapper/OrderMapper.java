@@ -1,6 +1,7 @@
 package restaurant.model.mapper;
 
 import org.mapstruct.Mapper;
+import restaurant.model.Account;
 import restaurant.model.Dish;
 import restaurant.model.Order;
 import restaurant.model.Restaurant;
@@ -15,7 +16,9 @@ public interface OrderMapper extends MapperBase<Order, OrderDto, OrderPostDto> {
     default Order postDtoToEntity(OrderPostDto postDto){
         return Order.builder()
                 .orderTime(postDto.getOrderTime())
-                .orderStatus(postDto.getOrderStatus())
+                .account(Account.builder()
+                        .id(postDto.getAccountId())
+                        .build())
                 .restaurant(Restaurant.builder()
                         .id(postDto.getRestaurantId())
                         .build())

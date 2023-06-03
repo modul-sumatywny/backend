@@ -21,6 +21,8 @@ public class OrderDto {
 
     @NotNull
     private String orderStatus;
+    @NotNull
+    private Integer orderTotalCost;
 
     @NotNull(message = "Restaurant ID must not be null")
     private RestaurantDto restaurant;
