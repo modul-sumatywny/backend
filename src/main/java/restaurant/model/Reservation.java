@@ -1,5 +1,6 @@
 package restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,14 +23,16 @@ public class Reservation implements ModelEntity<Long> {
     @Column(name = "reservation_id", nullable = false)
     private Long id;
 
-    @Column
-    @NotNull
-    private Long accountId;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    @JsonBackReference
+    private Account account;
 
     @Column
     private LocalDateTime reservationDateTime;
 
     @ManyToOne
     @JoinColumn(name = "table_id")
+    @JsonBackReference
     private Table table;
 }

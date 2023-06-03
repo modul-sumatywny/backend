@@ -1,10 +1,17 @@
 package restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +34,10 @@ public class Table implements ModelEntity<Long> {
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonBackReference
     private Restaurant restaurant;
+
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "table")
+    @JsonManagedReference
+    private List<Reservation> reservations;
 }

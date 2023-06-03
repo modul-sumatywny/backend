@@ -1,18 +1,25 @@
 package restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Account implements ModelEntity<Long> {
 
     @Id
@@ -49,6 +56,10 @@ public class Account implements ModelEntity<Long> {
 
     @Column
     private String password;
+
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "account")
+    @JsonManagedReference
+    private List<Reservation> reservations;
 
     public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
 //        this.id = UUID.randomUUID();

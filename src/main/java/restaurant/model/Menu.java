@@ -1,5 +1,6 @@
 package restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,8 @@ public class Menu implements ModelEntity<Long> {
     @Column
     private String name;
 
-    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
-    @JoinColumn(name = "menu_id")
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "menu")
+    @JsonManagedReference
     private List<Restaurant> restaurants;
 
     @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
