@@ -16,6 +16,9 @@ public interface OrderMapper extends MapperBase<Order, OrderDto, OrderPostDto> {
     default Order postDtoToEntity(OrderPostDto postDto){
         return Order.builder()
                 .orderTime(postDto.getOrderTime())
+                .lastName(postDto.getLastName())
+                .firstName(postDto.getFirstName())
+                .phoneNumber(postDto.getPhoneNumber())
                 .account(Account.builder()
                         .id(postDto.getAccountId())
                         .build())

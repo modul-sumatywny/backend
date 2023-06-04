@@ -21,4 +21,14 @@ public interface TableMapper extends MapperBase<Table, TableDto, TablePostDto> {
                         .build())
                 .build();
     }
+
+    @Override
+    default TableDto entityToDto(Table entity){
+        return TableDto.builder()
+                .numberOfSeats(entity.getNumberOfSeats())
+                .id(entity.getId())
+                .tableNumber(entity.getTableNumber())
+                .restaurantId(entity.getRestaurant().getId())
+                .build();
+    }
 }

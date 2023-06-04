@@ -104,18 +104,4 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
-
-    @GetMapping("{dishId}/getOrders")
-    public ResponseEntity<?> getOrders(@PathVariable Long dishId) {
-        try {
-            Dish dish = dishService.getById(dishId);
-            List<OrderDto> orders = dish.getOrders().stream()
-                    .map(orderMapper::entityToDto)
-                    .toList();
-
-            return ok(orders);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
-    }
 }

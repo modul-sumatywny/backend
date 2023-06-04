@@ -24,4 +24,15 @@ public interface RestaurantMapper extends MapperBase<Restaurant, RestaurantDto, 
                 .build();
     }
 
+    @Override
+    default RestaurantDto entityToDto(Restaurant entity) {
+        return RestaurantDto.builder()
+                .id(entity.getId())
+                .menu_id(entity.getMenu().getId())
+                .phoneNumber(entity.getPhoneNumber())
+                .name(entity.getName())
+                .address(entity.getAddress())
+                .photo(entity.getPhoto())
+                .build();
+    }
 }

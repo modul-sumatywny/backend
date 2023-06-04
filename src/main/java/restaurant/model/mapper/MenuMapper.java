@@ -20,4 +20,5 @@ public interface MenuMapper extends MapperBase<Menu, MenuDto, MenuPostDto> {
                         .toList())
                 .build();
     }
+
 }

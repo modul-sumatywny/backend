@@ -21,4 +21,6 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
 
         this.tableService = tableService;
     }
+
+
 }

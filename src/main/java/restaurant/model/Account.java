@@ -28,16 +28,13 @@ public class Account implements ModelEntity<Long> {
     private Long id;
 
     @Column
-    private String username;
+    private String email;
 
     @Column
     private String firstName;
 
     @Column
     private String lastName;
-
-    @Column
-    private String email;
 
     @Column
     private String phoneNumber;
@@ -68,10 +65,9 @@ public class Account implements ModelEntity<Long> {
 
     public Account(String username, String firstName, String lastName, String email, String phoneNumber, String password) {
 //        this.id = UUID.randomUUID();
-        this.username = username;
+        this.email = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
     }

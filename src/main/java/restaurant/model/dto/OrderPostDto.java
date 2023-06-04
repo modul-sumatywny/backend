@@ -1,5 +1,6 @@
 package restaurant.model.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,6 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderPostDto {
 
+    @NotNull(message = "First name must not be null")
+    private String firstName;
+    @NotNull(message = "Last name must not be null")
+    private String lastName;
+    @NotNull(message = "Phone number must not be null")
+    private String phoneNumber;
+    @NotNull(message = "Order time must not be null")
     private LocalDateTime orderTime;
 
     @NotNull(message = "Restaurant ID must not be null")

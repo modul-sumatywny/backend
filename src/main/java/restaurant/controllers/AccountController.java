@@ -36,16 +36,6 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAccounts());
     }
 
-    @PutMapping("/self/change-email")
-    public ResponseEntity<Object> changeEmail(Principal principal, String email) {
-        try {
-            accountService.changeEmail(principal.getName(), email);
-            return ResponseEntity.ok("Email changed");
-        } catch (IllegalStateException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
-    }
-
     @PutMapping("/self/change-password")
     public ResponseEntity<Object> changePass(Principal principal, String password, HttpServletResponse response) {
         try {

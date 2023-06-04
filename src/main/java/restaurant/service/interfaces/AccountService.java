@@ -18,8 +18,6 @@ public interface AccountService {
 
     String generateJwtToken(AccountDetails clientDetails, String password);
 
-    void changeEmail(String username, String email);
-
     void changePass(String username, String hashedPass);
 
     void archive(String username);

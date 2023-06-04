@@ -22,5 +22,5 @@ public class TableDto {
     @Min(value = 1, message = "Address of restaurant cannot be blank")
     private Integer numberOfSeats;
 
-    private RestaurantDto restaurant;
+    private Long restaurantId;
 }

@@ -18,7 +18,7 @@ public class AccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByUsername(username).orElseThrow(() ->
+        Account account = accountRepository.findByEmail(username).orElseThrow(() ->
                 new UsernameNotFoundException(username));
 
         List<SimpleGrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(account.getRole().name()));

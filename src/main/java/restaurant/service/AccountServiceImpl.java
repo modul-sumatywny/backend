@@ -41,50 +41,39 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Long register(RegistrationDto registrationForm) {
-        boolean isValidEmail = RegistrationDto.validateEmail(registrationForm.getEmail());
-        boolean isValidLogin = registrationForm.validateUsername(registrationForm.getUsername());
-        boolean checkEmail = accountRepository.findByEmail(registrationForm.getEmail()).isPresent();
-        boolean checkLogin = accountRepository.findByUsername(registrationForm.getUsername()).isPresent();
-        if (!isValidEmail) {
+        boolean isValidLogin = RegistrationDto.validateEmail(registrationForm.getEmail());
+        boolean checkLogin = accountRepository.findByEmail(registrationForm.getEmail()).isPresent();
+        if (!isValidLogin) {
             throw new IllegalStateException("email not valid");
         }
 
-        if (!isValidLogin) {
-            throw new IllegalStateException("login not valid");
-        }
-
-        if (checkLogin && checkEmail && !accountRepository.findByUsername(registrationForm.getUsername()).get().isEnabled()) {
-            Account account = accountRepository.findByUsername(registrationForm.getUsername())
+        if (checkLogin && !accountRepository.findByEmail(registrationForm.getEmail()).get().isEnabled()) {
+            Account account = accountRepository.findByEmail(registrationForm.getEmail())
                     .orElseThrow(IllegalStateException::new);
             account.setEnabled(true);
             account.setModifiedAt(LocalDateTime.now());
             accountRepository.save(account);
-            return accountRepository.findByUsername(registrationForm.getUsername()).get().getId();
+            return accountRepository.findByEmail(registrationForm.getEmail()).get().getId();
         } else {
             if (checkLogin) {
-                throw new IllegalStateException("clientExist");
-            }
-
-            if (checkEmail) {
-                throw new IllegalStateException("Email is taken by another user.");
+                throw new IllegalStateException("Email is taken by another user");
             }
         }
 
-        return accountRepository.save(
-                new Account(registrationForm.getUsername(),
-                        registrationForm.getFirstName(),
-                        registrationForm.getLastName(),
-                        registrationForm.getEmail(),
-                        registrationForm.getPhoneNumber(),
-                        bCryptPasswordEncoder.encode(registrationForm.getPassword()))
-        ).getId();
+        return accountRepository.save(Account.builder()
+                        .email(registrationForm.getEmail())
+                        .role(Role.CLIENT)
+                        .createdAt(LocalDateTime.now())
+                        .isEnabled(true)
+                        .password(bCryptPasswordEncoder.encode(registrationForm.getPassword())).build()).getId();
     }
+
 
     @Override
     public AccountDetails signIn(SignInDto singInForm) {
         Authentication authentication =
                 authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(singInForm.getUsername(), singInForm.getPassword()));
+                        new UsernamePasswordAuthenticationToken(singInForm.getEmail(), singInForm.getPassword()));
 
         return (AccountDetails) authentication.getPrincipal();
     }
@@ -109,11 +98,10 @@ public class AccountServiceImpl implements AccountService {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    @Override
     @Transactional
-    public void changeEmail(String username, String email) {
+    public void changeEmail(String email) {
         if (RegistrationDto.validateEmail(email) && accountRepository.findByEmail(email).isEmpty()) {
-            Account client = accountRepository.findByUsername(username).orElseThrow(IllegalStateException::new);
+            Account client = accountRepository.findByEmail(email).orElseThrow(IllegalStateException::new);
             client.setEmail(email);
             client.setModifiedAt(LocalDateTime.now());
             accountRepository.save(client);
@@ -125,7 +113,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void changePass(String username, String hashedPass) {
-        Account client = accountRepository.findByUsername(username)
+        Account client = accountRepository.findByEmail(username)
                 .orElseThrow(IllegalStateException::new);
         client.setPassword(hashedPass);
         client.setModifiedAt(LocalDateTime.now());
@@ -134,7 +122,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccount(String username) {
-        return accountRepository.findByUsername(username)
+        return accountRepository.findByEmail(username)
                 .orElseThrow(() -> new IllegalStateException("Client does not exist"));
     }
 
@@ -145,7 +133,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void archive(String username) {
-        Account client = accountRepository.findByUsername(username)
+        Account client = accountRepository.findByEmail(username)
                 .orElseThrow(IllegalStateException::new);
         client.setEnabled(false);
         client.setModifiedAt(LocalDateTime.now());
@@ -154,7 +142,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void active(String username) {
-        Account client = accountRepository.findByUsername(username)
+        Account client = accountRepository.findByEmail(username)
                 .orElseThrow(IllegalStateException::new);
         client.setEnabled(true);
         client.setModifiedAt(LocalDateTime.now());
@@ -163,7 +151,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void changeRole(String username, Role role) {
-        Account client = accountRepository.findByUsername(username)
+        Account client = accountRepository.findByEmail(username)
                 .orElseThrow(IllegalStateException::new);
         client.setRole(role);
         client.setModifiedAt(LocalDateTime.now());
