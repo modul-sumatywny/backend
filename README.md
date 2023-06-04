@@ -23,3 +23,6 @@ http://localhost:8083/swagger-ui/index.html
 Postgres:
 Tentoze
 Restaurant1234
+
+mongodb+srv://restaurant-application.vdykjww.mongodb.net/?retryWrites=true&w=majority
+adres mongo 
