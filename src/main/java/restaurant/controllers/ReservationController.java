@@ -51,7 +51,7 @@ public class ReservationController extends CrudController<Long, Reservation, Res
             }
             return ok(reservationService.getTimes(restaurantId,numberOfGuests,reservationTime));
         }catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
