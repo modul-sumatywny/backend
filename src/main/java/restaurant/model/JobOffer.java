@@ -16,9 +16,11 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "JOB_OFFERS")
-public class JobOffer {
+public class JobOffer implements ModelEntity<Long> {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
