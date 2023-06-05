@@ -42,7 +42,7 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     )
     public ResponseEntity<OrderDto> createTEntity(@RequestBody OrderPostDto entityPostDto) {
         try {
-            Order order = mapper.postDtoToEntity(entityPostDto);
+            Order order = mapper.postDtoToEntity(entityPostDto); // dodac dishe z menu
             order.setOrderStatus(OrderStatus.PLACED);
             order.setOrderTotalCost(dishService.getByIds(entityPostDto.getDishesIDs()).stream().mapToInt(Dish::getPrice).sum());
             return ok(mapper.entityToDto(orderService.create(order)));
