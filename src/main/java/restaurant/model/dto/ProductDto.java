@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import restaurant.model.MeasurementUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,5 +23,7 @@ public class ProductDto {
 
     @NotBlank(message = "EAN number cannot be blank")
     private String ean;
+
+    private MeasurementUnit measurementUnit;
 
 }

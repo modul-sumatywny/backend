@@ -11,6 +11,9 @@ import restaurant.model.Product;
 import restaurant.model.dto.DishDto;
 import restaurant.model.dto.DishPostDto;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Mapper
 public interface DishMapper extends MapperBase<Dish, DishDto, DishPostDto> {
 
@@ -20,11 +23,11 @@ public interface DishMapper extends MapperBase<Dish, DishDto, DishPostDto> {
                 .name(postDto.getName())
                 .category(postDto.getCategory())
                 .price(postDto.getPrice())
-                .products(postDto.getProductsIds().stream()
-                        .map(id -> Product.builder()
-                                .id(id)
-                                .build())
-                        .toList())
+                .products(postDto.getQuantitiesWithProductIds().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> Product.builder().id(entry.getValue()).build()
+                        )))
                 .build();
     }
 }

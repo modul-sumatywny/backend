@@ -16,6 +16,7 @@ public interface ProductMapper extends MapperBase<Product, ProductDto, ProductPo
         return Product.builder()
                 .name(postDto.getName())
                 .ean(postDto.getEan())
+                .measurementUnit(postDto.getMeasurementUnit())
                 .build();
     }
 }

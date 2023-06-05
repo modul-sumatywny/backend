@@ -17,6 +17,8 @@ import restaurant.model.mapper.ProductMapper;
 import restaurant.service.DishService;
 import restaurant.service.ProductService;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -47,13 +49,17 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
         try {
             Dish entity = mapper.postDtoToEntity(dishPostDto);
 
-            List<Product> productList;
-            if (dishPostDto.getProductsIds().size() > 0) {
-                productList = productService.getByIds(dishPostDto.getProductsIds());
+            Map<Integer,Product> productMap;
+            if (!dishPostDto.getQuantitiesWithProductIds().isEmpty()) {
+                productMap = dishPostDto.getQuantitiesWithProductIds().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> Product.builder().id(entry.getValue()).build()
+                        ));
             } else {
-                productList = entityService.getById(id).getProducts();
+                productMap = dishService.getById(id).getProducts();
             }
-            entity.setProducts(productList);
+            entity.setProducts(productMap);
 
             Dish updatedTEntity = entityService.update(id, entity);
             return ok(mapper.entityToDto(updatedTEntity));
@@ -63,12 +69,12 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @Transactional
-    @PostMapping("{dishId}/addProduct/{productId}")
-    public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId) {
+    @PostMapping("{dishId}/addProduct/{productId}/quantity/{quantity}")
+    public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId, @PathVariable Integer quantity) {
         try {
             Dish dish = dishService.getById(dishId);
             Product product = productService.getById(productId);
-            dish.getProducts().add(product);
+            dish.getProducts().put(quantity,product);
 
             Dish updatedDish = dishService.update(dishId, dish);
             return ok(mapper.entityToDto(updatedDish));
@@ -95,7 +101,7 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     public ResponseEntity<?> getProducts(@PathVariable Long dishId) {
         try {
             Dish dish = dishService.getById(dishId);
-            List<ProductDto> products = dish.getProducts().stream()
+            List<ProductDto> products = dish.getProducts().values().stream()
                     .map(productMapper::entityToDto)
                     .toList();
 

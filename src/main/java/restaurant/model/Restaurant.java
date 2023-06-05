@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -42,11 +43,14 @@ public class Restaurant implements ModelEntity<Long> {
     @JsonBackReference
     private Menu menu;
 
-    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "restaurant")
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "restaurant")
     @JsonManagedReference
     private List<Table> tables;
 
-    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "restaurant")
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "restaurant")
     @JsonManagedReference
     private List<Order> orders;
+
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "restaurant")
+    private List<Stock> stocks;
 }

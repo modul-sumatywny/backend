@@ -1,14 +1,12 @@
 package restaurant.model.dto;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +21,6 @@ public class DishPostDto {
 
     @NotBlank(message = "Category of dish cannot be blank")
     private String category;
-
     @NotNull
-    private List<Long> productsIds = new ArrayList<>();
+    private Map<Integer,Long> quantitiesWithProductIds;
 }
