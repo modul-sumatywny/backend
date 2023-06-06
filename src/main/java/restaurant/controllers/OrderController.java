@@ -5,17 +5,16 @@ import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Order;
 import restaurant.model.OrderStatus;
-import restaurant.model.Product;
 import restaurant.model.dto.OrderDto;
 import restaurant.model.dto.OrderPostDto;
 import restaurant.model.mapper.OrderMapper;
 import restaurant.service.DishService;
 import restaurant.service.OrderService;
+import restaurant.service.StockService;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -26,11 +25,14 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     private final OrderService orderService;
     private final DishService dishService;
 
-    public OrderController(OrderService orderService, DishService dishService) {
+    private final StockService stockService;
+
+    public OrderController(OrderService orderService, DishService dishService, StockService stockService) {
         super(Mappers.getMapper(OrderMapper.class), orderService);
 
         this.orderService = orderService;
         this.dishService = dishService;
+        this.stockService = stockService;
     }
 
     @Override
@@ -56,6 +58,9 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     public ResponseEntity<Object> addProduct(@PathVariable Long orderId, @RequestParam OrderStatus status) {
         try {
             Order order = orderService.getById(orderId);
+            if(status.equals(OrderStatus.IN_PROGRESS)) {
+
+            }
             order.setOrderStatus(status);
             return ok(mapper.entityToDto(order));
         } catch (Exception e) {

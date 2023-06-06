@@ -1,12 +1,18 @@
 package restaurant.controllers;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import restaurant.model.Dish;
 import restaurant.model.Table;
+import restaurant.model.dto.MenuDto;
 import restaurant.model.dto.TableDto;
 import restaurant.model.dto.TablePostDto;
 import restaurant.model.mapper.TableMapper;
 import restaurant.service.TableService;
+
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -21,6 +27,4 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
 
         this.tableService = tableService;
     }
-
-
 }

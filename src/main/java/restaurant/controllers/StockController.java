@@ -44,9 +44,9 @@ public class StockController {
     @Transactional
     public ResponseEntity<?> synchronizeStocks(@PathVariable Long restaurantId) {
         try {
-    /*        Restaurant restaurant = restaurantService.getById(restaurantId);
+        Restaurant restaurant = restaurantService.getById(restaurantId);
             List<Product> productList = restaurant.getMenu().getDishes().stream()
-                    .flatMap(dish -> dish.getProducts().values().stream())
+                    .flatMap(dish -> dish.getDishProducts().stream().map(dishProduct -> dishProduct.getProduct()))
                     .distinct()
                     .collect(Collectors.toList());
 
@@ -66,10 +66,26 @@ public class StockController {
                         .stock(0)
                         .isEnabled(false)
                         .build();
-                stockService.create(stock);*/
+                stockService.create(stock);
+            }
             return ok(new Object());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+
+    @PostMapping("{stockId}/addStock")
+    @Transactional
+    public ResponseEntity<?> addStock(@PathVariable Long stockId,@RequestParam Integer quantity) {
+        try {
+            Stock stock = stockService.getById(stockId);
+            stock.setIsEnabled(true);
+            stock.setStock(stock.getStock() + quantity);
+            return ResponseEntity.status(HttpStatus.OK).body("Stock: " + stock.getStock());
+        }catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+
 }
