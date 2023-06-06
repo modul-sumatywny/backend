@@ -2,19 +2,21 @@ package restaurant.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.xml.bind.ValidationException;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restaurant.model.Dish;
-import restaurant.model.Order;
-import restaurant.model.OrderStatus;
+import restaurant.model.*;
 import restaurant.model.dto.OrderDto;
 import restaurant.model.dto.OrderPostDto;
 import restaurant.model.mapper.OrderMapper;
-import restaurant.service.DishService;
+import restaurant.repository.StockRepository;import restaurant.service.DishService;
 import restaurant.service.OrderService;
 import restaurant.service.StockService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -23,6 +25,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class OrderController extends CrudController<Long, Order, OrderDto, OrderPostDto> {
 
     private final OrderService orderService;
+
     private final DishService dishService;
 
     private final StockService stockService;
@@ -58,8 +61,22 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     public ResponseEntity<Object> addProduct(@PathVariable Long orderId, @RequestParam OrderStatus status) {
         try {
             Order order = orderService.getById(orderId);
-            if(status.equals(OrderStatus.IN_PROGRESS)) {
-
+            if (status.equals(OrderStatus.IN_PROGRESS)) {
+                List<DishProduct> dishProducts = order.getDishes().stream()
+                        .flatMap(dish -> dish.getDishProducts().stream())
+                        .collect(Collectors.toList());
+                List<Stock> stocks = stockService.getStocksByRestaurantId(order.getRestaurant().getId());
+                for (DishProduct dishProduct : dishProducts) {
+                    Stock stockToChange = stocks.stream().filter(stock -> stock.getProduct().getId().equals(dishProduct.getId().getProduct())).findFirst().orElse(null);
+                    if(stockToChange!=null && stockToChange.getIsEnabled()){
+                        if (stockToChange.getStock() - dishProduct.getQuantity() >= 0){
+                            stockToChange.setStock(stockToChange.getStock() - dishProduct.getQuantity());
+                            stockService.update(stockToChange.getId(),stockToChange);
+                        } else {
+                            throw new ValidationException("There is no stock of " + dishProduct.getProduct().getName());
+                        }
+                    }
+                }
             }
             order.setOrderStatus(status);
             return ok(mapper.entityToDto(order));
