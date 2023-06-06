@@ -17,13 +17,11 @@ public interface DishMapper extends MapperBase<Dish, DishDto, DishPostDto> {
     default Dish postDtoToEntity(DishPostDto postDto) {
         List<DishProduct> dishProducts = postDto.getProductsWithQuantities().entrySet().stream()
                 .map(entry -> {
-                    Long productId = entry.getKey();
                     Integer quantity = entry.getValue();
-                    Product product = Product.builder()
-                            .id(productId)
-                            .build();
                     return DishProduct.builder()
-                            .product(product)
+                            .id(DishProductId.builder().product(entry.getKey())
+                                    .build())
+                            .dish(Dish.builder().id(entry.getKey()).build())
                             .quantity(quantity)
                             .build();
                 })

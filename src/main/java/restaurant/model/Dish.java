@@ -36,11 +36,20 @@ public class Dish implements ModelEntity<Long> {
     @ManyToMany(mappedBy = "dishes")
     private List<Menu> menus;
 
-    @OneToMany(mappedBy = "dish")
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE},mappedBy = "dish")
     private List<DishProduct> dishProducts;
 
     @ManyToMany(mappedBy = "dishes")
     private List<Order> orders = new ArrayList<>();
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Dish{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", category='").append(category).append('\'');
+        sb.append(", price=").append(price);
+        sb.append('}');
+        return sb.toString();
+    }
 }

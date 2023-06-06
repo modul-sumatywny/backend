@@ -38,7 +38,7 @@ public class Product implements ModelEntity<Long> {
     @Enumerated(EnumType.STRING)
     private MeasurementUnit measurementUnit;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "product")
     private List<DishProduct> dishProducts;
 
     @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "product")

@@ -7,24 +7,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.REMOVE;
+
 @Entity
 @Data
 @Table(name = "dish_product")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DishProduct {
+public class DishProduct implements ModelEntity<DishProductId> {
 
     @EmbeddedId
     DishProductId id;
-    @ManyToOne
-    @MapsId("dish_id")
+    @ManyToOne()
+    @MapsId("dish")
     @JoinColumn(name = "dish_id")
     private Dish dish;
 
-
-    @ManyToOne
-    @MapsId("product_id")
+    @ManyToOne()
+    @MapsId("product")
     @JoinColumn(name = "product_id")
     private Product product;
 
