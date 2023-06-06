@@ -31,17 +31,4 @@ public class ProductController extends CrudController<Long, Product, ProductDto,
         this.productService = productService;
     }
 
-    @GetMapping("{productId}/getDishes")
-    public ResponseEntity<?> getDishes(@PathVariable Long productId) {
-        try {
-            Product product = productService.getById(productId);
-            List<DishDto> dishes = product.getDishes().stream()
-                    .map(dishMapper::entityToDto)
-                    .toList();
-
-            return ok(dishes);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
-    }
 }

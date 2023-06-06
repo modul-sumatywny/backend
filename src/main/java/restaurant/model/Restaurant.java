@@ -53,4 +53,16 @@ public class Restaurant implements ModelEntity<Long> {
 
     @OneToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE}, mappedBy = "restaurant")
     private List<Stock> stocks;
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Restaurant{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", phoneNumber='").append(phoneNumber).append('\'');
+        sb.append(", address='").append(address).append('\'');
+        sb.append(", photo='").append(photo).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

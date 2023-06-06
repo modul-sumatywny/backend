@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import jakarta.persistence.Table;
 
 import static jakarta.persistence.CascadeType.*;
@@ -39,15 +36,11 @@ public class Dish implements ModelEntity<Long> {
     @ManyToMany(mappedBy = "dishes")
     private List<Menu> menus;
 
-    @ManyToMany(cascade = {MERGE, DETACH, REFRESH, REMOVE})
-    @JoinTable(
-            name = "dish_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "dish_id"))
-    @MapKeyColumn(name = "quantity",nullable = true)
-    private Map<Integer, Product> products;
+    @OneToMany(mappedBy = "dish")
+    private List<DishProduct> dishProducts;
 
     @ManyToMany(mappedBy = "dishes")
     private List<Order> orders = new ArrayList<>();
+
 
 }

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
+import restaurant.model.DishProduct;
 import restaurant.model.Product;
 import restaurant.model.dto.*;
 import restaurant.model.mapper.DishMapper;
@@ -16,9 +17,9 @@ import restaurant.model.mapper.OrderMapper;
 import restaurant.model.mapper.ProductMapper;
 import restaurant.service.DishService;
 import restaurant.service.ProductService;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -48,36 +49,47 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     public ResponseEntity<DishDto> updateTEntity(@PathVariable Long id, @RequestBody DishPostDto dishPostDto) {
         try {
             Dish entity = mapper.postDtoToEntity(dishPostDto);
+            entity.setId(id);
+            List<DishProduct> productList = new ArrayList<>();
 
-            Map<Integer,Product> productMap;
-            if (!dishPostDto.getQuantitiesWithProductIds().isEmpty()) {
-                productMap = dishPostDto.getQuantitiesWithProductIds().entrySet().stream()
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                entry -> Product.builder().id(entry.getValue()).build()
-                        ));
-            } else {
-                productMap = dishService.getById(id).getProducts();
+            for (Long productId : dishPostDto.getProductsWithQuantities().keySet()) {
+                Product product = productService.getById(productId);
+                Integer quantity = dishPostDto.getProductsWithQuantities().get(productId);
+                DishProduct dishProduct = DishProduct.builder()
+                        .dish(entity)
+                        .product(product)
+                        .quantity(quantity)
+                        .build();
+                productList.add(dishProduct);
             }
-            entity.setProducts(productMap);
 
-            Dish updatedTEntity = entityService.update(id, entity);
-            return ok(mapper.entityToDto(updatedTEntity));
+            entity.setDishProducts(productList);
+
+            Dish updatedEntity = entityService.update(id, entity);
+            return ok(mapper.entityToDto(updatedEntity));
         } catch (Exception e) {
             throw new EntityNotFoundException(e.getMessage());
         }
     }
 
     @Transactional
-    @PostMapping("{dishId}/addProduct/{productId}/quantity/{quantity}")
-    public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId, @PathVariable Integer quantity) {
+    @PostMapping("{dishId}/addProduct/{productId}")
+    public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId) {
         try {
             Dish dish = dishService.getById(dishId);
             Product product = productService.getById(productId);
-            dish.getProducts().put(quantity,product);
+
+            if (!dish.getDishProducts().contains(product)) {
+                DishProduct dishProduct = DishProduct.builder()
+                        .dish(dish)
+                        .product(product)
+                        .quantity(1)  // Ustaw ilość produktu na 1 lub odpowiednią wartość
+                        .build();
+                dish.getDishProducts().add(dishProduct);
+            }
 
             Dish updatedDish = dishService.update(dishId, dish);
-            return ok(mapper.entityToDto(updatedDish));
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             throw new EntityNotFoundException(e.getMessage());
         }
@@ -98,16 +110,17 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @GetMapping("{dishId}/getProducts")
-    public ResponseEntity<?> getProducts(@PathVariable Long dishId) {
+    public ResponseEntity<List<ProductDto>> getProducts(@PathVariable Long dishId) {
         try {
             Dish dish = dishService.getById(dishId);
-            List<ProductDto> products = dish.getProducts().values().stream()
+            List<ProductDto> products = dish.getDishProducts().stream()
+                    .map(DishProduct::getProduct)
                     .map(productMapper::entityToDto)
                     .toList();
 
-            return ok(products);
+            return ResponseEntity.ok(products);
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            throw new EntityNotFoundException(ex.getMessage());
         }
     }
 }

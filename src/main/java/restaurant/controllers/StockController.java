@@ -44,7 +44,7 @@ public class StockController {
     @Transactional
     public ResponseEntity<?> synchronizeStocks(@PathVariable Long restaurantId) {
         try {
-            Restaurant restaurant = restaurantService.getById(restaurantId);
+    /*        Restaurant restaurant = restaurantService.getById(restaurantId);
             List<Product> productList = restaurant.getMenu().getDishes().stream()
                     .flatMap(dish -> dish.getProducts().values().stream())
                     .distinct()
@@ -66,10 +66,8 @@ public class StockController {
                         .stock(0)
                         .isEnabled(false)
                         .build();
-                stockService.create(stock);
-            }
-
-            return ResponseEntity.ok().build();
+                stockService.create(stock);*/
+            return ok(new Object());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }

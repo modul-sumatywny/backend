@@ -37,4 +37,15 @@ public class Menu implements ModelEntity<Long> {
             joinColumns = @JoinColumn(name = "dish_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id"))
     private List<Dish> dishes;
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Menu{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", restaurants=").append(restaurants);
+        sb.append(", dishes=").append(dishes);
+        sb.append('}');
+        return sb.toString();
+    }
 }
