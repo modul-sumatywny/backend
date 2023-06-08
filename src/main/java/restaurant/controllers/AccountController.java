@@ -2,12 +2,17 @@ package restaurant.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Account;
 import restaurant.model.Role;
+import restaurant.model.dto.AccountDto;
+import restaurant.model.dto.StockDto;
+import restaurant.model.mapper.AccountMapper;
+import restaurant.model.mapper.StockMapper;
 import restaurant.service.interfaces.AccountService;
 
 import jakarta.servlet.http.Cookie;
@@ -20,6 +25,8 @@ import java.util.List;
 @RequestMapping("/accounts")
 public class AccountController {
     private final AccountService accountService;
+    private final AccountMapper mapper = Mappers.getMapper(AccountMapper.class);
+
 
     @GetMapping("/self")
     public ResponseEntity<Object> getClient(Principal principal) {
@@ -32,8 +39,12 @@ public class AccountController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<Account>> getClients() {
-        return ResponseEntity.ok(accountService.getAccounts());
+    public ResponseEntity<List<AccountDto>> getClients() {
+        List<Account> accounts = accountService.getAccounts();
+        List<AccountDto> accountDtos = accounts.stream()
+                .map(mapper::entityToDto)
+                .toList();
+        return ResponseEntity.ok(accountDtos);
     }
 
     @PutMapping("/self/change-password")

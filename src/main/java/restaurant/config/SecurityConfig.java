@@ -4,7 +4,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,6 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -65,8 +63,12 @@ public class SecurityConfig {
     }
 
 
-    public AuthenticationFilter authenticationJwtTokenFilter() {
-        return new AuthenticationFilter();
+    public AuthenticationFilter authenticationJwtTokenFilter(HttpSecurity http) {
+        try {
+            return new AuthenticationFilter(jwtDecoder(), accountDetailsService, authenticationManager(http,bCryptPasswordEncoder()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Bean
@@ -85,19 +87,37 @@ public class SecurityConfig {
                                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         // Set permissions on endpoints
-        HttpSecurity httpSecurity = http.authorizeRequests()
+        http.authorizeRequests()
                 // Swagger endpoints must be publicly accessible
-                .anyRequest().permitAll()
+                .requestMatchers("/")
+                .permitAll()
+                .requestMatchers("/v3/api-docs/**")
+                .permitAll()
+                .requestMatchers("/stocks/**","/restaurants/**","/reservations/**","/products/**","/dishes/**","/forms/**","/jobOffers/**","/menus/**","/orders/**","/tables/**","/login/**", "/log-out/**", "/register/**", "/products/visible/**")
+                .permitAll()
+                .requestMatchers(format("%s/**", swaggerPath))
+                .permitAll()
+                // Our private endpoints
+                .anyRequest()
+                .authenticated()
+                // Set up oauth2 resource server
                 .and()
-                .csrf().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .logout().disable();
+                .httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .addFilterAfter(authenticationJwtTokenFilter(http), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Used by JwtAuthenticationProvider to generate JWT tokens
+    // Extract authorities from the roles claim
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+
+        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
     @Bean
     public JwtEncoder jwtEncoder() {
         var jwk = new RSAKey.Builder(this.rsaPublicKey).privateKey(this.rsaPrivateKey).build();
@@ -109,16 +129,6 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.rsaPublicKey).build();
-    }
-
-    // Extract authorities from the roles claim
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-
-        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
     }
 
 //    @Bean

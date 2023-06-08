@@ -21,7 +21,7 @@ public class ReservationDto {
 
     @NotNull(message = "Reservation time cannot be null")
     @Future(message = "Reservation time must be in future time")
-    private LocalDateTime reservationDateTime;
+    private String reservationDateTime;
 
     private Long tableId;
 }

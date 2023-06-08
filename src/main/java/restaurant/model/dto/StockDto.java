@@ -18,8 +18,7 @@ public class StockDto {
 
     private Long id;
 
-    @JsonBackReference
-    private Product product;
+    private ProductDto product;
 
     private Long restaurantId;
 

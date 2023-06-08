@@ -41,6 +41,7 @@ public class StockController {
         this.restaurantService = restaurantService;
     }
 
+
     @GetMapping("{restaurantId}/get-stocks")
     public ResponseEntity<?> getStocks(@PathVariable Long restaurantId) {
         try {

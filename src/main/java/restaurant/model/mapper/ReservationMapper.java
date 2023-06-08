@@ -29,7 +29,7 @@ public interface ReservationMapper extends MapperBase<Reservation, ReservationDt
         return ReservationDto.builder()
                 .id(entity.getId())
                 .tableId(entity.getTable().getId())
-                .reservationDateTime(entity.getReservationDateTime())
+                .reservationDateTime(entity.getReservationDateTime().toString())
                 .accountId(entity.getAccount().getId())
                 .build();
     }
