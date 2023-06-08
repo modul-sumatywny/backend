@@ -19,14 +19,9 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 import org.springframework.web.util.WebUtils;
-import restaurant.model.RequestLog;
-import restaurant.repository.mongo.RequestLogRepository;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Component
@@ -40,10 +35,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private RequestLogRepository requestLogRepository;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -69,44 +60,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         }
 
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
-
-        filterChain.doFilter(wrappedRequest, wrappedResponse);
-
-        String url = wrappedRequest.getRequestURL().toString();
-        String method = wrappedRequest.getMethod();
-        String requestPayload = getRequestPayload(wrappedRequest);
-        String responsePayload = getResponsePayload(wrappedResponse);
-        try {
-            saveRequestLog(url,method,requestPayload,responsePayload);
-        } catch (Exception e) {
-            log.info("Logging request answer to database failed");
-        }
-    }
-
-    private String getRequestPayload(ContentCachingRequestWrapper request) throws UnsupportedEncodingException {
-        byte[] content = request.getContentAsByteArray();
-        if (content.length > 0) {
-            return new String(content, request.getCharacterEncoding());
-        }
-        return null;
-    }
-
-    private String getResponsePayload(ContentCachingResponseWrapper response) throws UnsupportedEncodingException {
-        byte[] content = response.getContentAsByteArray();
-        if (content.length > 0) {
-            return new String(content, response.getCharacterEncoding());
-        }
-        return null;
-    }
-
-    private void saveRequestLog(String url, String method, String requestPayload, String responsePayload) {
-        RequestLog requestLog = new RequestLog();
-        requestLog.setUrl(url);
-        requestLog.setMethod(method);
-        requestLog.setRequest(requestPayload);
-        requestLog.setResponse(responsePayload);
-        requestLogRepository.save(requestLog);
+        filterChain.doFilter(request, response);
     }
 }
