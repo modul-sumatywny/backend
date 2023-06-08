@@ -32,4 +32,13 @@ public class Stock implements ModelEntity<Long> {
 
     @Column
     private Boolean isEnabled = false;
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", stock=" + stock +
+                ", isEnabled=" + isEnabled +
+                '}';
+    }
 }

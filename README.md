@@ -24,5 +24,5 @@ Postgres:
 Tentoze
 Restaurant1234
 
-mongodb+srv://restaurant-application.vdykjww.mongodb.net/?retryWrites=true&w=majority
+mongodb+srv://Tentoze:Restaurant1234@restaurant-application.vdykjww.mongodb.net/
 adres mongo 

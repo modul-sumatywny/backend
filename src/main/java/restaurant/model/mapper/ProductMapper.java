@@ -19,4 +19,5 @@ public interface ProductMapper extends MapperBase<Product, ProductDto, ProductPo
                 .measurementUnit(postDto.getMeasurementUnit())
                 .build();
     }
+
 }
