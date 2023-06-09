@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,11 +17,16 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+import restaurant.model.RequestLog;
+import restaurant.repository.mongo.RequestLogRepository;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
-@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtDecoder jwtDecoder;
@@ -29,10 +35,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationFilter(JwtDecoder jwtDecoder, UserDetailsService userDetailsService, AuthenticationManager authenticationManager) {
+    private final RequestLogRepository requestLogRepository;
+
+    public AuthenticationFilter(JwtDecoder jwtDecoder, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, RequestLogRepository requestLogRepository) {
         this.jwtDecoder = jwtDecoder;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
+        this.requestLogRepository = requestLogRepository;
     }
 
     @Override
@@ -55,7 +64,46 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 log.info("Token expired, generating new");
             }
         }
+        filterChain.doFilter(request, response);
+/*        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
         filterChain.doFilter(request, response);
+
+        String url = wrappedRequest.getRequestURL().toString();
+        String method = wrappedRequest.getMethod();
+        String requestPayload = getRequestPayload(wrappedRequest);
+        String responsePayload = getResponsePayload(wrappedResponse);
+        try {
+            saveRequestLog(url,method,requestPayload,responsePayload);
+        } catch (Exception e) {
+            log.error("Logging request answer to database failed");
+        }
+        wrappedResponse.copyBodyToResponse();*/
+    }
+
+    private String getRequestPayload(ContentCachingRequestWrapper request) throws UnsupportedEncodingException {
+        byte[] content = request.getContentAsByteArray();
+        if (content.length > 0) {
+            return new String(content, StandardCharsets.UTF_8);
+        }
+        return null;
+    }
+
+    private String getResponsePayload(ContentCachingResponseWrapper response) throws UnsupportedEncodingException {
+        byte[] content = response.getContentAsByteArray();
+        if (content.length > 0) {
+            return new String(content, StandardCharsets.UTF_8);
+        }
+        return null;
+    }
+
+    private void saveRequestLog(String url, String method, String requestPayload, String responsePayload) {
+        RequestLog requestLog = new RequestLog();
+        requestLog.setUrl(url);
+        requestLog.setMethod(method);
+        requestLog.setRequest(requestPayload);
+        requestLog.setResponse(responsePayload);
+        requestLogRepository.save(requestLog);
     }
 }

@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import restaurant.model.AccountDetails;
 import restaurant.model.AccountDetailsService;
+import restaurant.repository.mongo.RequestLogRepository;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -42,6 +45,7 @@ import static java.lang.String.format;
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final AccountDetailsService accountDetailsService;
 
     @Value("${jwt.public.key}")
@@ -52,6 +56,14 @@ public class SecurityConfig {
 
     @Value("${swagger.path}")
     private String swaggerPath;
+
+    private final RequestLogRepository requestLogRepository;
+
+    @Autowired
+    public SecurityConfig(RequestLogRepository requestLogRepository, AccountDetailsService accountDetailsService) {
+        this.accountDetailsService = accountDetailsService;
+        this.requestLogRepository = requestLogRepository;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -65,7 +77,7 @@ public class SecurityConfig {
 
     public AuthenticationFilter authenticationJwtTokenFilter(HttpSecurity http) {
         try {
-            return new AuthenticationFilter(jwtDecoder(), accountDetailsService, authenticationManager(http,bCryptPasswordEncoder()));
+            return new AuthenticationFilter(jwtDecoder(), accountDetailsService, authenticationManager(http,bCryptPasswordEncoder()),requestLogRepository);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -3,6 +3,7 @@ package restaurant.controllers;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Table;
@@ -26,5 +27,32 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
         super(Mappers.getMapper(TableMapper.class), tableService);
 
         this.tableService = tableService;
+    }
+
+    @Override
+  //  @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN','SCOPE_MANAGER'})")
+    public ResponseEntity<List<TableDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    public ResponseEntity<TableDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    public ResponseEntity<TableDto> createTEntity(TablePostDto entityPostDto) {
+        return super.createTEntity(entityPostDto);
+    }
+
+    @Override
+    public ResponseEntity<TableDto> updateTEntity(Long aLong, TablePostDto entityPostDto) {
+        return super.updateTEntity(aLong, entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority({'ADMIN','MANAGER'})")
+    public ResponseEntity<TableDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
     }
 }

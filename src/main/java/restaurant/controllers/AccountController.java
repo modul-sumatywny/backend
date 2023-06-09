@@ -38,7 +38,7 @@ public class AccountController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<AccountDto>> getClients() {
         List<Account> accounts = accountService.getAccounts();
         List<AccountDto> accountDtos = accounts.stream()
