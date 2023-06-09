@@ -16,6 +16,9 @@ public class AccountDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+    public Long getId(){
+        return account.getId();
+    }
 
     @Override
     public String getPassword() {
