@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends RepositoryBase<Reservation, Long> {
     List<Reservation> findByTableIdAndReservationDateTimeBetween(Long table_id, LocalDateTime reservationDateTime, LocalDateTime reservationDateTime2);
+    List<Reservation> findByReservationDateTimeBetween(LocalDateTime reservationDateTime, LocalDateTime reservationDateTime2);
 }

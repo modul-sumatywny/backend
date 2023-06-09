@@ -38,6 +38,10 @@ public class ReservationService extends CrudService<Long, Reservation> {
         return reservationRepository.findByTableIdAndReservationDateTimeBetween(tableId, reservationDateTime, secondReservationDateTime);
     }
 
+    public List<Reservation> findByReservationDateTimeBeetwen(LocalDateTime reservationDateTime, LocalDateTime secondReservationDateTime) {
+        return reservationRepository.findByReservationDateTimeBetween(reservationDateTime,secondReservationDateTime);
+    }
+
     public List<String> getTimes(Long restaurantId, int numberOfGuests, LocalDateTime reservationTime) {
         try {
 

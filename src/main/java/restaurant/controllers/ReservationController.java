@@ -1,5 +1,6 @@
 package restaurant.controllers;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Future;
 import org.mapstruct.factory.Mappers;
@@ -49,8 +50,35 @@ public class ReservationController extends CrudController<Long, Reservation, Res
             if (reservationTime.isBefore(currentTime)) {
                 throw new IllegalArgumentException("Reservation time must be in the future");
             }
-            return ok(reservationService.getTimes(restaurantId,numberOfGuests,reservationTime));
-        }catch (Exception e) {
+            return ok(reservationService.getTimes(restaurantId, numberOfGuests, reservationTime));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<?> getReservationsForRestaurant(
+            @PathVariable Long restaurantId,
+            @RequestParam @Nullable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime reservationTime) {
+        try {
+            List<ReservationDto> reservations;
+            if(reservationTime==null) {
+                reservations = reservationService.getAll().stream()
+                        .filter(reservation -> reservation.getTable().getRestaurant().getId().equals(restaurantId))
+                        .map(mapper::entityToDto)
+                        .collect(Collectors.toList());
+            } else {
+                LocalDateTime startDateTime = reservationTime.with(LocalTime.MIN); // Ustawienie godziny na 00:00
+                LocalDateTime endDateTime = reservationTime.plusDays(1).with(LocalTime.MIN); // Ustawienie godziny na 00:00 kolejnego dnia
+
+                reservations = reservationService.findByReservationDateTimeBeetwen(startDateTime, endDateTime)
+                        .stream()
+                        .filter(reservation -> reservation.getTable().getRestaurant().getId().equals(restaurantId))
+                        .map(mapper::entityToDto)
+                        .collect(Collectors.toList());
+            }
+            return ok(reservations);
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -67,8 +95,8 @@ public class ReservationController extends CrudController<Long, Reservation, Res
             if (reservationTime.isBefore(currentTime)) {
                 throw new IllegalArgumentException("Reservation time must be in the future");
             }
-            return ok(reservationService.reserveTable(restaurantId,accountId,numberOfGuests,reservationTime));
-        }catch (Exception e) {
+            return ok(mapper.entityToDto(reservationService.reserveTable(restaurantId, accountId, numberOfGuests, reservationTime)));
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
