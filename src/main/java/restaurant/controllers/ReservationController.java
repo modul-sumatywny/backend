@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Future;
 import org.mapstruct.factory.Mappers;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Reservation;
 import restaurant.model.Table;
@@ -39,6 +40,36 @@ public class ReservationController extends CrudController<Long, Reservation, Res
         this.tableService = tableService;
     }
 
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<List<ReservationDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<ReservationDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
+    public ResponseEntity<ReservationDto> createTEntity(ReservationPostDto entityPostDto) {
+        return super.createTEntity(entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
+    public ResponseEntity<ReservationDto> updateTEntity(Long aLong, ReservationPostDto entityPostDto) {
+        return super.updateTEntity(aLong, entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<ReservationDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
+    }
+
     @GetMapping("/reservation-options/{restaurantId}")
     public ResponseEntity<?> getReservationOptions(
             @PathVariable Long restaurantId,
@@ -57,6 +88,7 @@ public class ReservationController extends CrudController<Long, Reservation, Res
     }
 
     @GetMapping("/{restaurantId}")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<?> getReservationsForRestaurant(
             @PathVariable Long restaurantId,
             @RequestParam @Nullable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime reservationTime) {
@@ -84,6 +116,7 @@ public class ReservationController extends CrudController<Long, Reservation, Res
     }
 
     @PostMapping("/reserve-table/{restaurantId}")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     public ResponseEntity<?> reserveTable(
             @PathVariable Long restaurantId,
             @RequestParam Long accountId,

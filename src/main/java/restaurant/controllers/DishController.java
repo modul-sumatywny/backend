@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.DishProduct;
@@ -45,7 +46,24 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @Override
+    public ResponseEntity<List<DishDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    public ResponseEntity<DishDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<DishDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
+    }
+
+    @Override
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @PostMapping(
             value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -68,6 +86,7 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
     @Override
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @PutMapping(
             value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -96,6 +115,7 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @PostMapping("{dishId}/addProduct/{productId}")
     public ResponseEntity<Object> addProduct(@PathVariable Long dishId, @PathVariable Long productId,@RequestParam Integer quantity) {
         try {
@@ -119,6 +139,7 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
         }
     }
 
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     @GetMapping("{dishId}/getMenus")
     public ResponseEntity<?> getMenus(@PathVariable Long dishId) {
         try {
@@ -133,6 +154,7 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
         }
     }
 
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     @GetMapping("{dishId}/getProducts")
     public ResponseEntity<List<ProductDto>> getProducts(@PathVariable Long dishId) {
         try {

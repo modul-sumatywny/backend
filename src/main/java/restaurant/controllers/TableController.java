@@ -30,28 +30,31 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
     }
 
     @Override
-  //  @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN','SCOPE_MANAGER'})")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     public ResponseEntity<List<TableDto>> getAllTEntities() {
         return super.getAllTEntities();
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<TableDto> getTEntityById(Long aLong) {
         return super.getTEntityById(aLong);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     public ResponseEntity<TableDto> createTEntity(TablePostDto entityPostDto) {
         return super.createTEntity(entityPostDto);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     public ResponseEntity<TableDto> updateTEntity(Long aLong, TablePostDto entityPostDto) {
         return super.updateTEntity(aLong, entityPostDto);
     }
 
     @Override
-    @PreAuthorize("hasAuthority({'ADMIN','MANAGER'})")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     public ResponseEntity<TableDto> deleteTEntity(Long aLong) {
         return super.deleteTEntity(aLong);
     }
