@@ -64,7 +64,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 log.info("Token expired, generating new");
             }
         }
-        filterChain.doFilter(request, response);
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
