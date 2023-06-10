@@ -30,7 +30,7 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<List<TableDto>> getAllTEntities() {
         return super.getAllTEntities();
     }
