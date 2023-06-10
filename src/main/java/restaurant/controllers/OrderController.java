@@ -57,7 +57,8 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
             Order order = mapper.postDtoToEntity(entityPostDto); // dodac dishe z menu
             order.setOrderStatus(OrderStatus.PLACED);
             order.setOrderTotalCost(dishService.getByIds(entityPostDto.getDishesIDs()).stream().mapToInt(Dish::getPrice).sum());
-            return ok(mapper.entityToDto(orderService.create(order)));
+            Order createdOrder =orderService.create(order);
+            return ok(mapper.entityToDto(orderService.getById(createdOrder.getId())));
         } catch (Exception e) {
             throw new EntityNotFoundException(e);
         }
