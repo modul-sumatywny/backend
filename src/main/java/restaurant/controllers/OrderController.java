@@ -117,7 +117,7 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
         return true;
     }
 
-    @GetMapping("{accountId}")
+    @GetMapping("account/{accountId}")
     public ResponseEntity<?> getOrdersForAccount(@PathVariable Long accountId) {
         try {
             List<Order> orders = orderService.getOrdersByAccountId(accountId);
