@@ -1,9 +1,11 @@
 package restaurant.controllers;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.xml.bind.ValidationException;
 import org.mapstruct.factory.Mappers;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +13,15 @@ import restaurant.exception.IncorrectStatusFlowException;
 import restaurant.model.*;
 import restaurant.model.dto.OrderDto;
 import restaurant.model.dto.OrderPostDto;
+import restaurant.model.dto.ReservationDto;
 import restaurant.model.mapper.OrderMapper;
 import restaurant.repository.StockRepository;
 import restaurant.service.DishService;
 import restaurant.service.OrderService;
 import restaurant.service.StockService;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,5 +114,15 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
             throw new IncorrectStatusFlowException(orderStatusFrom, orderStatusTo);
         }
         return true;
+    }
+
+    @GetMapping("{accountId}")
+    public ResponseEntity<?> getOrdersForAccount(@PathVariable Long accountId) {
+        try {
+            List<Order> orders = orderService.getOrdersByAccountId(accountId);
+            return ok(orders.stream().map(mapper::entityToDto).collect(Collectors.toList()));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
