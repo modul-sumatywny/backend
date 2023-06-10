@@ -23,6 +23,7 @@ import restaurant.service.StockService;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -56,7 +57,12 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
         try {
             Order order = mapper.postDtoToEntity(entityPostDto); // dodac dishe z menu
             order.setOrderStatus(OrderStatus.PLACED);
-            order.setOrderTotalCost(dishService.getByIds(entityPostDto.getDishesIDs()).stream().mapToInt(Dish::getPrice).sum());
+            Integer totalCost = entityPostDto.getDishesIDs().stream()
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                    .entrySet().stream()
+                    .mapToInt(entry -> dishService.getById(entry.getKey()).getPrice() * entry.getValue().intValue())
+                    .sum();
+            order.setOrderTotalCost(totalCost);
             Order createdOrder =orderService.create(order);
             return ok(mapper.entityToDto(orderService.getById(createdOrder.getId())));
         } catch (Exception e) {
