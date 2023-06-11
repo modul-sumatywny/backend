@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Menu;
@@ -39,7 +40,30 @@ public class MenuController extends CrudController<Long, Menu, MenuDto, MenuPost
     }
 
     @Override
+    public ResponseEntity<List<MenuDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    public ResponseEntity<MenuDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<MenuDto> createTEntity(MenuPostDto entityPostDto) {
+        return super.createTEntity(entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<MenuDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
+    }
+
+    @Override
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @PutMapping(
             value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -65,7 +89,8 @@ public class MenuController extends CrudController<Long, Menu, MenuDto, MenuPost
     }
 
     @Transactional
-    @PostMapping("{menuId}/addDish/{dishId}/")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    @PostMapping("{menuId}/addDish/{dishId}")
     public ResponseEntity<Object> addProductToDish(@PathVariable long dishId, @PathVariable long menuId) {
         try {
             Menu menu = menuService.getById(dishId);
@@ -79,6 +104,7 @@ public class MenuController extends CrudController<Long, Menu, MenuDto, MenuPost
     }
 
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     @GetMapping("{menuId}/getDishes/")
     public ResponseEntity<?> getMenuDishes(@PathVariable long menuId) {
         try {

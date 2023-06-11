@@ -32,8 +32,6 @@ public class AuthController {
             AccountDetails user = accountService.signIn(request);
             String token = accountService.generateJwtToken(user, request.password);
 
-
-
             return ok()
                     .body(LoginDto.builder()
                             .id(user.getId())

@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.exception.IncorrectStatusFlowException;
 import restaurant.model.*;
@@ -47,7 +48,32 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<List<OrderDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<OrderDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
+    public ResponseEntity<OrderDto> updateTEntity(Long aLong, OrderPostDto entityPostDto) {
+        return super.updateTEntity(aLong, entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
+    public ResponseEntity<OrderDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
+    }
+
+    @Override
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     @PostMapping(
             value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -63,7 +89,7 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
                     .mapToInt(entry -> dishService.getById(entry.getKey()).getPrice() * entry.getValue().intValue())
                     .sum();
             order.setOrderTotalCost(totalCost);
-            Order createdOrder =orderService.create(order);
+            Order createdOrder = orderService.create(order);
             return ok(mapper.entityToDto(orderService.getById(createdOrder.getId())));
         } catch (Exception e) {
             throw new EntityNotFoundException(e);
@@ -71,8 +97,9 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     }
 
     @Transactional
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     @PutMapping("change-status/{orderId}")
-    public ResponseEntity<Object> addProduct(@PathVariable Long orderId, @RequestParam OrderStatus status) {
+    public ResponseEntity<Object> changeStatus(@PathVariable Long orderId, @RequestParam OrderStatus status) {
         try {
             Order order = orderService.getById(orderId);
             if (checkStatusFlow(order.getOrderStatus(), status)) {
@@ -123,7 +150,8 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
         return true;
     }
 
-    @GetMapping("{accountId}")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
+    @GetMapping("account/{accountId}")
     public ResponseEntity<?> getOrdersForAccount(@PathVariable Long accountId) {
         try {
             List<Order> orders = orderService.getOrdersByAccountId(accountId);

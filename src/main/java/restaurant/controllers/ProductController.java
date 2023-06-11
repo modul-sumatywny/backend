@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Product;
@@ -31,4 +32,33 @@ public class ProductController extends CrudController<Long, Product, ProductDto,
         this.productService = productService;
     }
 
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<List<ProductDto>> getAllTEntities() {
+        return super.getAllTEntities();
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<ProductDto> getTEntityById(Long aLong) {
+        return super.getTEntityById(aLong);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<ProductDto> createTEntity(ProductPostDto entityPostDto) {
+        return super.createTEntity(entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<ProductDto> updateTEntity(Long aLong, ProductPostDto entityPostDto) {
+        return super.updateTEntity(aLong, entityPostDto);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
+    public ResponseEntity<ProductDto> deleteTEntity(Long aLong) {
+        return super.deleteTEntity(aLong);
+    }
 }
