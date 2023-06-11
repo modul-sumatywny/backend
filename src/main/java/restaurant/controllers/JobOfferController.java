@@ -1,8 +1,6 @@
 package restaurant.controllers;
 
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import restaurant.model.JobOffer;
@@ -10,8 +8,6 @@ import restaurant.model.dto.JobOfferDto;
 import restaurant.model.dto.JobOfferPostDto;
 import restaurant.model.mapper.JobOfferMapper;
 import restaurant.service.JobOfferService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/jobOffers")
@@ -22,33 +18,5 @@ public class JobOfferController extends CrudController<Long, JobOffer, JobOfferD
     public JobOfferController(JobOfferService jobOfferService) {
         super(Mappers.getMapper(JobOfferMapper.class), jobOfferService);
         this.jobOfferService = jobOfferService;
-    }
-
-    @Override
-    public ResponseEntity<List<JobOfferDto>> getAllTEntities() {
-        return super.getAllTEntities();
-    }
-
-    @Override
-    public ResponseEntity<JobOfferDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> createTEntity(JobOfferPostDto entityPostDto) {
-        return super.createTEntity(entityPostDto);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> updateTEntity(Long aLong, JobOfferPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
     }
 }

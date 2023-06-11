@@ -3,7 +3,6 @@ package restaurant.controllers;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Dish;
 import restaurant.model.Order;
@@ -32,36 +31,7 @@ public class RestaurantController extends CrudController<Long, Restaurant, Resta
         this.restaurantService = restaurantService;
     }
 
-    @Override
-    public ResponseEntity<List<RestaurantDto>> getAllTEntities() {
-        return super.getAllTEntities();
-    }
-
-    @Override
-    public ResponseEntity<RestaurantDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> createTEntity(RestaurantPostDto entityPostDto) {
-        return super.createTEntity(entityPostDto);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> updateTEntity(Long aLong, RestaurantPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
-    }
-
-    @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
-    }
-
     @GetMapping("{restaurantId}/getTables")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<?> getTables(@PathVariable Long restaurantId){
         try {
             Restaurant restaurant = restaurantService.getById(restaurantId);
@@ -76,7 +46,6 @@ public class RestaurantController extends CrudController<Long, Restaurant, Resta
     }
 
     @GetMapping("{restaurantId}/getOrders")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<?> getOrders(@PathVariable Long restaurantId){
         try {
             Restaurant restaurant = restaurantService.getById(restaurantId);

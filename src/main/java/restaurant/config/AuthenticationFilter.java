@@ -64,10 +64,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 log.info("Token expired, generating new");
             }
         }
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        filterChain.doFilter(request, response);
+/*        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
-        filterChain.doFilter(wrappedRequest, wrappedResponse);
+        filterChain.doFilter(request, response);
 
         String url = wrappedRequest.getRequestURL().toString();
         String method = wrappedRequest.getMethod();
@@ -78,7 +79,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             log.error("Logging request answer to database failed");
         }
-        wrappedResponse.copyBodyToResponse();
+        wrappedResponse.copyBodyToResponse();*/
     }
 
     private String getRequestPayload(ContentCachingRequestWrapper request) throws UnsupportedEncodingException {

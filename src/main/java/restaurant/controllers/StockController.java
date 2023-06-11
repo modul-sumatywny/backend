@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import restaurant.model.Product;
 import restaurant.model.Restaurant;
@@ -44,7 +43,6 @@ public class StockController {
 
 
     @GetMapping("{restaurantId}/get-stocks")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
     public ResponseEntity<?> getStocks(@PathVariable Long restaurantId) {
         try {
             List<Stock> stockList = stockService.getStocksByRestaurantId(restaurantId);
@@ -58,7 +56,6 @@ public class StockController {
     }
 
     @PostMapping("{restaurantId}/synchronize-stock")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @Transactional
     public ResponseEntity<?> synchronizeStocks(@PathVariable Long restaurantId) {
         try {
@@ -93,7 +90,6 @@ public class StockController {
     }
 
     @PutMapping("{stockId}/addStock")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @Transactional
     public ResponseEntity<?> addStock(@PathVariable Long stockId, @RequestParam Integer quantity) {
         try {
@@ -107,7 +103,6 @@ public class StockController {
     }
 
     @PutMapping("{stockId}/enableStock")
-    @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
     @Transactional
     public ResponseEntity<?> enableStock(@PathVariable Long stockId, @RequestParam Boolean isEnable) {
         try {
