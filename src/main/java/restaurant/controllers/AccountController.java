@@ -110,9 +110,9 @@ public class AccountController {
 
     @PutMapping("/change-role")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<Object> changeRole(String userName, Role role) {
+    public ResponseEntity<Object> changeRole(Long accountId, Role role) {
         try {
-            accountService.changeRole(userName, role);
+            accountService.changeRole(accountId, role);
             return ResponseEntity.ok("Role changed");
         } catch (IllegalStateException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

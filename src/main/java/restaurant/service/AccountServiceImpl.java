@@ -150,8 +150,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changeRole(String username, Role role) {
-        Account client = accountRepository.findByEmail(username)
+    public void changeRole(Long accountId, Role role) {
+        Account client = accountRepository.findById(accountId)
                 .orElseThrow(IllegalStateException::new);
         client.setRole(role);
         client.setModifiedAt(LocalDateTime.now());

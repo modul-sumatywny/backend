@@ -24,7 +24,7 @@ public interface AccountService {
 
     void active(String username);
 
-    void changeRole(String username, Role role);
+    void changeRole(Long accountId, Role role);
 
     List<Account> getAllArchivedClients();
 
