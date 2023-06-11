@@ -89,4 +89,17 @@ public class RestaurantController extends CrudController<Long, Restaurant, Resta
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+    @PutMapping("{restaurantId}/enableRestaurant")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    public ResponseEntity<?> enableRestaurant(@PathVariable Long restaurantId, @RequestParam boolean isEnabled){
+        try {
+            Restaurant restaurant = restaurantService.getById(restaurantId);
+            restaurant.setIsEnabled(isEnabled);
+
+            return ok(mapper.entityToDto(restaurantService.update(restaurantId,restaurant)));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
 }

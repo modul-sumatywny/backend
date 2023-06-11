@@ -38,6 +38,9 @@ public class Restaurant implements ModelEntity<Long> {
     @Column
     private String photo;
 
+    @Column
+    private Boolean isEnabled;
+
     @ManyToOne
     @JoinColumn(name = "menu_id")
     @JsonBackReference

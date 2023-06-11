@@ -30,4 +30,6 @@ public class RestaurantDto {
 
     private long menu_id;
 
+    private Boolean isEnabled;
+
 }

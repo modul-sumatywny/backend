@@ -1,11 +1,10 @@
 package restaurant.controllers;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.xml.bind.ValidationException;
 import org.mapstruct.factory.Mappers;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,15 +13,13 @@ import restaurant.exception.IncorrectStatusFlowException;
 import restaurant.model.*;
 import restaurant.model.dto.OrderDto;
 import restaurant.model.dto.OrderPostDto;
-import restaurant.model.dto.ReservationDto;
 import restaurant.model.mapper.OrderMapper;
-import restaurant.repository.StockRepository;
 import restaurant.service.DishService;
 import restaurant.service.OrderService;
+import restaurant.service.RestaurantService;
 import restaurant.service.StockService;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.io.NotActiveException;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,13 +35,15 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     private final DishService dishService;
 
     private final StockService stockService;
+    private final RestaurantService restaurantService;
 
-    public OrderController(OrderService orderService, DishService dishService, StockService stockService) {
+    public OrderController(OrderService orderService, DishService dishService, StockService stockService, RestaurantService restaurantService) {
         super(Mappers.getMapper(OrderMapper.class), orderService);
 
         this.orderService = orderService;
         this.dishService = dishService;
         this.stockService = stockService;
+        this.restaurantService = restaurantService;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
-    public ResponseEntity<OrderDto> updateTEntity(@PathVariable Long id,@RequestBody OrderPostDto orderPostDto) {
+    public ResponseEntity<OrderDto> updateTEntity(@PathVariable Long id, @RequestBody OrderPostDto orderPostDto) {
         return super.updateTEntity(id, orderPostDto);
     }
 
@@ -81,16 +80,21 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
     )
     public ResponseEntity<OrderDto> createTEntity(@RequestBody OrderPostDto entityPostDto) {
         try {
-            Order order = mapper.postDtoToEntity(entityPostDto); // dodac dishe z menu
-            order.setOrderStatus(OrderStatus.PLACED);
-            Integer totalCost = entityPostDto.getDishesIDs().stream()
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                    .entrySet().stream()
-                    .mapToInt(entry -> dishService.getById(entry.getKey()).getPrice() * entry.getValue().intValue())
-                    .sum();
-            order.setOrderTotalCost(totalCost);
-            Order createdOrder = orderService.create(order);
-            return ok(mapper.entityToDto(orderService.getById(createdOrder.getId())));
+            Order order = mapper.postDtoToEntity(entityPostDto);
+            if (restaurantService.getById(entityPostDto.getRestaurantId()).getIsEnabled()) {
+                order.setOrderStatus(OrderStatus.PLACED);
+                Integer totalCost = entityPostDto.getDishesIDs().stream()
+                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                        .entrySet().stream()
+                        .mapToInt(entry -> dishService.getById(entry.getKey()).getPrice() * entry.getValue().intValue())
+                        .sum();
+                order.setOrderTotalCost(totalCost);
+                Order createdOrder = orderService.create(order);
+                return ok(mapper.entityToDto(orderService.getById(createdOrder.getId())));
+            } else {
+                throw new NotActiveException("Restaurant is not active");
+            }
+
         } catch (Exception e) {
             throw new EntityNotFoundException(e);
         }

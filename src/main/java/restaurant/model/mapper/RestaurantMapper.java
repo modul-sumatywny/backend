@@ -33,6 +33,7 @@ public interface RestaurantMapper extends MapperBase<Restaurant, RestaurantDto, 
                 .name(entity.getName())
                 .address(entity.getAddress())
                 .photo(entity.getPhoto())
+                .isEnabled(entity.getIsEnabled())
                 .build();
     }
 }
