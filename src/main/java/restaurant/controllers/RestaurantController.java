@@ -38,26 +38,26 @@ public class RestaurantController extends CrudController<Long, Restaurant, Resta
     }
 
     @Override
-    public ResponseEntity<RestaurantDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<RestaurantDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> createTEntity(RestaurantPostDto entityPostDto) {
+    public ResponseEntity<RestaurantDto> createTEntity(@RequestBody RestaurantPostDto entityPostDto) {
         return super.createTEntity(entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> updateTEntity(Long aLong, RestaurantPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<RestaurantDto> updateTEntity(@PathVariable Long id, @RequestBody RestaurantPostDto entityPostDto) {
+        return super.updateTEntity(id, entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<RestaurantDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<RestaurantDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 
     @GetMapping("{restaurantId}/getTables")

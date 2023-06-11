@@ -37,25 +37,25 @@ public class TableController extends CrudController<Long, Table, TableDto, Table
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
-    public ResponseEntity<TableDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<TableDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<TableDto> createTEntity(TablePostDto entityPostDto) {
+    public ResponseEntity<TableDto> createTEntity(@RequestBody TablePostDto entityPostDto) {
         return super.createTEntity(entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<TableDto> updateTEntity(Long aLong, TablePostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<TableDto> updateTEntity(@PathVariable Long id,@RequestBody TablePostDto entityPostDto) {
+        return super.updateTEntity(id, entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<TableDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<TableDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 }

@@ -3,6 +3,8 @@ package restaurant.controllers;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import restaurant.model.JobOffer;
@@ -30,25 +32,25 @@ public class JobOfferController extends CrudController<Long, JobOffer, JobOfferD
     }
 
     @Override
-    public ResponseEntity<JobOfferDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<JobOfferDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> createTEntity(JobOfferPostDto entityPostDto) {
+    public ResponseEntity<JobOfferDto> createTEntity(@RequestBody JobOfferPostDto entityPostDto) {
         return super.createTEntity(entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> updateTEntity(Long aLong, JobOfferPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<JobOfferDto> updateTEntity(@PathVariable Long id,@RequestBody JobOfferPostDto entityPostDto) {
+        return super.updateTEntity(id, entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<JobOfferDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<JobOfferDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 }

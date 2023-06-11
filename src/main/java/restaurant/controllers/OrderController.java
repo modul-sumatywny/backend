@@ -55,20 +55,20 @@ public class OrderController extends CrudController<Long, Order, OrderDto, Order
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
-    public ResponseEntity<OrderDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<OrderDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
-    public ResponseEntity<OrderDto> updateTEntity(Long aLong, OrderPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<OrderDto> updateTEntity(@PathVariable Long id,@RequestBody OrderPostDto orderPostDto) {
+        return super.updateTEntity(id, orderPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
-    public ResponseEntity<OrderDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<OrderDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 
     @Override

@@ -48,26 +48,26 @@ public class ReservationController extends CrudController<Long, Reservation, Res
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
-    public ResponseEntity<ReservationDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<ReservationDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
-    public ResponseEntity<ReservationDto> createTEntity(ReservationPostDto entityPostDto) {
-        return super.createTEntity(entityPostDto);
+    public ResponseEntity<ReservationDto> createTEntity(@RequestBody ReservationPostDto reservationPostDto) {
+        return super.createTEntity(reservationPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_ADMIN'})")
-    public ResponseEntity<ReservationDto> updateTEntity(Long aLong, ReservationPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<ReservationDto> updateTEntity(@PathVariable Long id,@RequestBody ReservationPostDto reservationPostDto) {
+        return super.updateTEntity(id, reservationPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<ReservationDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<ReservationDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 
     @GetMapping("/reservation-options/{restaurantId}")

@@ -40,25 +40,25 @@ public class ProductController extends CrudController<Long, Product, ProductDto,
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
-    public ResponseEntity<ProductDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<ProductDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<ProductDto> createTEntity(ProductPostDto entityPostDto) {
-        return super.createTEntity(entityPostDto);
+    public ResponseEntity<ProductDto> createTEntity(@RequestBody ProductPostDto productPostDto) {
+        return super.createTEntity(productPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<ProductDto> updateTEntity(Long aLong, ProductPostDto entityPostDto) {
-        return super.updateTEntity(aLong, entityPostDto);
+    public ResponseEntity<ProductDto> updateTEntity(@PathVariable Long id,@RequestBody ProductPostDto productPostDto) {
+        return super.updateTEntity(id, productPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<ProductDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<ProductDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 }

@@ -51,14 +51,14 @@ public class DishController extends CrudController<Long, Dish, DishDto, DishPost
     }
 
     @Override
-    public ResponseEntity<DishDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<DishDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<DishDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<DishDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 
     @Override

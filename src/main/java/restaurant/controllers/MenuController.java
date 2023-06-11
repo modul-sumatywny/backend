@@ -45,20 +45,20 @@ public class MenuController extends CrudController<Long, Menu, MenuDto, MenuPost
     }
 
     @Override
-    public ResponseEntity<MenuDto> getTEntityById(Long aLong) {
-        return super.getTEntityById(aLong);
+    public ResponseEntity<MenuDto> getTEntityById(@PathVariable Long id) {
+        return super.getTEntityById(id);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<MenuDto> createTEntity(MenuPostDto entityPostDto) {
+    public ResponseEntity<MenuDto> createTEntity(@RequestBody MenuPostDto entityPostDto) {
         return super.createTEntity(entityPostDto);
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority({'SCOPE_MANAGER'})")
-    public ResponseEntity<MenuDto> deleteTEntity(Long aLong) {
-        return super.deleteTEntity(aLong);
+    public ResponseEntity<MenuDto> deleteTEntity(@PathVariable Long id) {
+        return super.deleteTEntity(id);
     }
 
     @Override
