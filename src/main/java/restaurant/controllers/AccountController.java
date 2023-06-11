@@ -84,7 +84,7 @@ public class AccountController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("{username}/archive")
     public ResponseEntity<Object> archiveClient(@PathVariable String username) {
         try {
@@ -96,7 +96,7 @@ public class AccountController {
 
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("{username}/active")
     public ResponseEntity<Object> activeClient(@PathVariable String username) {
         try {
@@ -109,7 +109,7 @@ public class AccountController {
     }
 
     @PutMapping("/change-role")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Object> changeRole(String userName, Role role) {
         try {
             accountService.changeRole(userName, role);
@@ -119,7 +119,7 @@ public class AccountController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/archived-clients")
     public ResponseEntity<Object> getAllArchivedClients() {
         try {
@@ -130,7 +130,7 @@ public class AccountController {
 
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/active-clients")
     public ResponseEntity<Object> getAllActiveClients() {
         try {
@@ -139,4 +139,15 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity<Object> deleteUser(@PathVariable Long accountId) {
+        try {
+            return ResponseEntity.ok(accountService.deleteUser(accountId));
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
 }

@@ -31,4 +31,6 @@ public interface AccountService {
     List<Account> getAllActiveClients();
 
     Long register(RegistrationDto registrationForm);
+
+    Long deleteUser(Long accountId);
 }

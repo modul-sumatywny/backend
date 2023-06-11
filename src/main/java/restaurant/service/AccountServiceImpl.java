@@ -167,4 +167,10 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAllActiveClients() {
         return accountRepository.findByIsEnabled(true);
     }
+
+    @Override
+    public Long deleteUser(Long accountId) {
+        accountRepository.deleteById(accountId);
+        return accountId;
+    }
 }
