@@ -41,13 +41,13 @@ public class ReservationController extends CrudController<Long, Reservation, Res
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     public ResponseEntity<List<ReservationDto>> getAllTEntities() {
         return super.getAllTEntities();
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority({'SCOPE_EMPLOYEE'})")
+    @PreAuthorize("hasAnyAuthority({'SCOPE_CLIENT'})")
     public ResponseEntity<ReservationDto> getTEntityById(@PathVariable Long id) {
         return super.getTEntityById(id);
     }
