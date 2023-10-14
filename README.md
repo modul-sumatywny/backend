@@ -20,9 +20,3 @@ wykonujemy komende: gradle bootRun
 Endpointy znajduja sie pod adresem:
 http://localhost:8083/swagger-ui/index.html
 
-Postgres:
-Tentoze
-Restaurant1234
-
-mongodb+srv://Tentoze:Restaurant1234@restaurant-application.vdykjww.mongodb.net/
-adres mongo 
